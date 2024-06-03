@@ -4,7 +4,7 @@ import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 
 @Entity()
-export class User {
+export class User1 {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
