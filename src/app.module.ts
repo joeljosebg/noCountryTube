@@ -6,6 +6,11 @@ import { DatabaseModule } from '@/libs/database/database.module';
 import { UsersModule } from './modules/users_test/users.module';
 import { IterationVideoModule } from './modules/iteration-video/iteration-video.module';
 
+import { VideosModule } from './modules/videos/videos.module';
+import { SupabaseModule } from './libs/supabase/supabase.module';
+import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
+import { UploadFilesModule } from './modules/upload-files/upload-files.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,6 +22,10 @@ import { IterationVideoModule } from './modules/iteration-video/iteration-video.
     DatabaseModule,
     UsersModule,
     IterationVideoModule,
+    VideosModule,
+    SupabaseModule,
+    CloudinaryModule,
+    UploadFilesModule,
   ],
   controllers: [],
   providers: [],
