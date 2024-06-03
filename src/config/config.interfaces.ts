@@ -4,4 +4,9 @@ export interface ConfigInterface {
   user: string;
   password: string;
   database: string;
+  supabase_url: string;
+  supabase_key: string;
+  cloud_name: string;
+  cloudinary_key: string;
+  cloudinary_secret: string;
 }

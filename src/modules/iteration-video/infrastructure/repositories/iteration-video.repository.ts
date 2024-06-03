@@ -6,7 +6,7 @@ import { IterationVideo } from '@/modules/iteration-video/domain/entities/iterat
 import { SaveLikeVideoWithUserDto } from '@/modules/iteration-video/applications/dto/save-like-video.dto';
 import { IterationVideoRepositoryPort } from '@/modules/iteration-video/domain/ports/interation-video';
 import { User } from '@/modules/users_test/domain/entities/user.entity';
-import { Video } from '@/modules/iteration-video/domain/entities/video.entity';
+import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { SaveDisLikeVideoWithUserDto } from '@/modules/iteration-video/applications/dto/save-dislike-video.dto';
 
 @Injectable()
@@ -32,19 +32,20 @@ export class IterationVideoRepository implements IterationVideoRepositoryPort {
     const { userId, videoId } = saveLike;
 
     // Esta implementado pero la validacion se tiene que hacer en el servicio para respetar el principio de responsabilidad unica
-    const video = await this.videoRepository.findOne({
-      where: { id: videoId },
-    });
+    // const video = await this.videoRepository.findOne({
+    //   where: { id: videoId },
+    // });
 
-    if (!video) {
-      throw new NotFoundException(`Video with id ${videoId} not found`);
-    }
+    // if (!video) {
+    //   throw new NotFoundException(`Video with id ${videoId} not found`);
+    // }
 
     // Esta implementado pero la validacion se tiene que hacer en el servicio para respetar el principio de responsabilidad unica
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
-    }
+
+    // const user = await this.userRepository.findOne({ where: { id: userId } });
+    // if (!user) {
+    //   throw new NotFoundException(`User with id ${userId} not found`);
+    // }
 
     const iterationVideo = await this.iterationVideoRepository.findOne({
       where: {
@@ -74,13 +75,13 @@ export class IterationVideoRepository implements IterationVideoRepositoryPort {
     const { userId, videoId } = saveDisLike;
 
     // Esta implementado pero la validacion se tiene que hacer en el servicio para respetar el principio de responsabilidad unica
-    const video = await this.videoRepository.findOne({
-      where: { id: videoId },
-    });
+    // const video = await this.videoRepository.findOne({
+    //   where: { id: videoId },
+    // });
 
-    if (!video) {
-      throw new NotFoundException(`Video with id ${videoId} not found`);
-    }
+    // if (!video) {
+    //   throw new NotFoundException(`Video with id ${videoId} not found`);
+    // }
 
     // Esta implementado pero la validacion se tiene que hacer en el servicio para respetar el principio de responsabilidad unica
     const user = await this.userRepository.findOne({ where: { id: userId } });

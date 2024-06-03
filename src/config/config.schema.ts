@@ -10,4 +10,9 @@ export const configSchema = Joi.object({
   ADMINISTRATOR_PASSWORD: Joi.string().required(),
   ADMINISTRATOR_USERNAME: Joi.string().required(),
   ADMINISTRATOR_EMAIL: Joi.string().required(),
+  SUPABASE_URL  : Joi.string().required(),
+  SUPABASE_KEY  : Joi.string().required(),
+  CLOUD_NAME: Joi.string().required(),
+  CLOUDINARY_KEY: Joi.string().required(),
+  CLOUDINARY_SECRET: Joi.string().required(),
 });

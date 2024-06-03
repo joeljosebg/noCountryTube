@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { IsDate, IsEmail } from 'class-validator';
-import { Video } from '@/modules/iteration-video/domain/entities/video.entity';
+import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 
 @Entity()

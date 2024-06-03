@@ -10,7 +10,7 @@ import {
   ITERATION_VIDEO_SERVICE_TOKEN,
 } from './provider.token';
 import { IterationVideoRepository } from '@/modules/iteration-video/infrastructure/repositories/iteration-video.repository';
-import { Video } from '@/modules/iteration-video/domain/entities/video.entity';
+import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { User } from '@/modules/users_test/domain/entities/user.entity';
 
 @Module({

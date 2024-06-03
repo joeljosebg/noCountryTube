@@ -1,6 +1,7 @@
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
-import { Video } from '@/modules/iteration-video/domain/entities/video.entity';
+import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDate, IsEmail } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,60 +14,58 @@ import {
 
 @Entity()
 export class User extends BaseEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @ApiProperty({ example: 'username' })
+  @Column({ unique: true })
+  @IsEmail()
+  email: string;
+
   @Column({ unique: true })
   username: string;
 
-  @ApiProperty({ example: 'exaple@gmail.com' })
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  password: string;
-
-  @ApiProperty({ example: 'lastName' })
-  @Column()
-  lastName: string;
-
-  @ApiProperty({ example: 'firstName' })
   @Column()
   firstName: string;
 
-  @ApiProperty({ example: '2000-01-01' })
+  @Column()
+  lastName: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  password: string;
+
   @Column({ type: 'date' })
+  @IsDate()
   birthday: Date;
 
-  @ApiProperty({ example: 'phone' })
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   phone: string;
 
-  @ApiProperty({ example: 'true' })
   @Column({ default: true })
   isActive: boolean;
 
-  @ApiProperty({ example: 'photo' })
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default:
+      'https://res.cloudinary.com/daux5omzt/image/upload/v1716906380/defaultProfileImage_baf38c.png',
+  })
   photo: string;
 
-  @ApiProperty({ example: 'user', enum: ['admin', 'user'] })
   @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
-  role: string;
-
-  @ApiProperty({ example: '2021-01-01' })
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @ApiProperty({ example: '2021-01-01' })
-  @UpdateDateColumn()
-  updatedAt: Date;
+  role: 'admin' | 'user';
 
   @OneToMany(() => Video, (video) => video.user)
   videos: Video[];
 
   @OneToMany(() => IterationVideo, (iterationVideo) => iterationVideo.user)
   interactionVideos: IterationVideo[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updatedAt: Date;
 }
