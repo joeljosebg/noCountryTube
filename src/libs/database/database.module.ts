@@ -1,6 +1,9 @@
+import { EnvConfig } from '@/config/envs.config';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+
 
 @Module({
   imports: [
@@ -10,13 +13,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         console.log({ config });
         return {
           type: 'postgres',
-          host: config.get('host'),
-          port: config.get('port'),
+          host: EnvConfig().host,
+          port: EnvConfig().port,
           username: config.get('user'),
           password: config.get('password'),
           database: config.get('database'),
           autoLoadEntities: true,
-          synchronize: true,
+          synchronize: false,
           logging: true,
           entities: ['src/modules/**/domain/entity/*.ts'],
           migrations: ['src/migration/**/*.ts'],
