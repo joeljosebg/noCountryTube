@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { IsDate, IsEmail } from 'class-validator';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User1 {
@@ -50,9 +51,17 @@ export class User1 {
   @OneToMany(() => IterationVideo, (iterationVideo) => iterationVideo.user)
   interactionVideos: IterationVideo[];
 
+  @ApiProperty({
+    example: '2021-09-01T00:00:00.000Z',
+    description: 'Date of creation',
+  })
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+  @ApiProperty({
+    example: '2021-09-01T00:00:00.000Z',
+    description: 'Date of last update',
+  })
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',

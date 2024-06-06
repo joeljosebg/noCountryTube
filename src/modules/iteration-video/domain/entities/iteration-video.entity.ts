@@ -9,7 +9,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
-import { User } from '@/modules/users_test/domain/entities/user.entity';
+import { User } from '@/modules/users/domain/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()

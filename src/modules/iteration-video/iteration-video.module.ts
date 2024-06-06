@@ -11,7 +11,7 @@ import {
 } from './provider.token';
 import { IterationVideoRepository } from '@/modules/iteration-video/infrastructure/repositories/iteration-video.repository';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
-import { User } from '@/modules/users_test/domain/entities/user.entity';
+import { User } from '@/modules/users/domain/entities/user.entity';
 
 @Module({
   imports: [

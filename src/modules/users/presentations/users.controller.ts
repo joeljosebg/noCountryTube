@@ -13,6 +13,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { USER_SERVICE_TOKEN } from '../provider.token';
 import { UserServiceInterface } from '../domain/services/user-service.interface';
 import { User } from '../domain/entities/user.entity';
+import { ResponseCreateUserDto } from '../applications/dtos/response-create-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -26,9 +27,11 @@ export class UsersController {
   @Post()
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [CreateUserDto],
+    type: [ResponseCreateUserDto],
   })
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ResponseCreateUserDto> {
     return this.userService.createUser(createUserDto);
   }
 

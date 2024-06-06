@@ -14,35 +14,47 @@ import {
 
 @Entity()
 export class User extends BaseEntity {
+  @ApiProperty({ example: 'uuid' })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty({ example: 'email' })
   @Column({ unique: true })
   @IsEmail()
   email: string;
 
+  @ApiProperty({ example: 'username' })
   @Column({ unique: true })
   username: string;
 
+  @ApiProperty({ example: 'firstName' })
   @Column()
   firstName: string;
 
+  @ApiProperty({ example: 'lastName' })
   @Column()
   lastName: string;
 
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
+  @ApiProperty({ example: 'birthday' })
   @Column({ type: 'date' })
   @IsDate()
   birthday: Date;
 
   @Column({ type: 'varchar', length: 20 })
+  @Column({ nullable: true })
   phone: string;
 
+  @ApiProperty({ example: 'isActive' })
   @Column({ default: true })
   isActive: boolean;
 
+  @ApiProperty({
+    example:
+      'https://res.cloudinary.com/daux5omzt/image/upload/v1716906380/defaultProfileImage_baf38c.png',
+  })
   @Column({
     nullable: true,
     default:
@@ -50,6 +62,7 @@ export class User extends BaseEntity {
   })
   photo: string;
 
+  @ApiProperty({ example: 'admin' })
   @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
   role: 'admin' | 'user';
 
@@ -59,9 +72,17 @@ export class User extends BaseEntity {
   @OneToMany(() => IterationVideo, (iterationVideo) => iterationVideo.user)
   interactionVideos: IterationVideo[];
 
+  @ApiProperty({
+    example: '2021-09-01T00:00:00.000Z',
+    description: 'Date of creation',
+  })
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+  @ApiProperty({
+    example: '2021-09-01T00:00:00.000Z',
+    description: 'Date of last update',
+  })
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
