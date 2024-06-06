@@ -21,5 +21,6 @@ import { BcryptModule } from '@/libs/bcrypt/bcrypt.module';
       useClass: UserRepository,
     },
   ],
+  exports: [USER_SERVICE_TOKEN],
 })
 export class UsersModule {}

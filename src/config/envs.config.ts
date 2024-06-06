@@ -11,4 +11,5 @@ export const EnvConfig = (): ConfigInterface => ({
   cloud_name: process.env.CLOUD_NAME,
   cloudinary_key: process.env.CLOUDINARY_KEY,
   cloudinary_secret: process.env.CLOUDINARY_SECRET,
+  jwtSecret: process.env.JWT_SECRET,
 });

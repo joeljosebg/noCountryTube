@@ -11,6 +11,7 @@ import { SupabaseModule } from './libs/supabase/supabase.module';
 import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
 import { UploadFilesModule } from './modules/upload-files/upload-files.module';
 import { BcryptModule } from './libs/bcrypt/bcrypt.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BcryptModule } from './libs/bcrypt/bcrypt.module';
     CloudinaryModule,
     UploadFilesModule,
     BcryptModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

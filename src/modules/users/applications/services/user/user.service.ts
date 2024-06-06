@@ -80,4 +80,7 @@ export class UserService implements UserServiceInterface {
       success: true,
     };
   }
+  async findByEmail(email: string): Promise<User> {
+    return await this.userRepository.findByEmail(email);
+  }
 }

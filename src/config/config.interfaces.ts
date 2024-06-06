@@ -9,4 +9,5 @@ export interface ConfigInterface {
   cloud_name: string;
   cloudinary_key: string;
   cloudinary_secret: string;
+  jwtSecret: string;
 }
