@@ -7,7 +7,10 @@ import { UserRepositoryPort } from '@/modules/users/domain/port/user-repository.
 import { UserRepository } from '@/modules/users/infrastructure/repository/user.repository';
 import { BCRYPT_SERVICE_TOKEN } from '@/libs/bcrypt/bcrypt.module';
 import { BcryptService } from '@/libs/bcrypt/bcrypt.service';
-import { ResponseCreateUserDto } from '../../dtos/response-create-user.dto';
+import { UserResponseDto } from '../../dtos/create-user-response.dto';
+import { SaveOptions, RemoveOptions } from 'typeorm';
+import { GetUsersResponseDto } from '../../dtos/get-users-response.dto';
+import { SuccessResponseDto } from '../../dtos/success-response.dto';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -16,7 +19,7 @@ export class UserService implements UserServiceInterface {
     @Inject(USER_REPOSITORY_TOKEN) private userRepository: UserRepositoryPort,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<ResponseCreateUserDto> {
+  async createUser(user: CreateUserDto): Promise<UserResponseDto> {
     const hashedPassword = await this.bcryptService.hashPassword(user.password);
 
     const userEmail = await this.userRepository.findByEmail(user.email);
@@ -37,30 +40,44 @@ export class UserService implements UserServiceInterface {
       });
     }
 
-    const userSave: User = await this.userRepository.createUser({
+    const userSave = await this.userRepository.createUser({
       ...user,
       password: hashedPassword,
     });
     return {
       success: true,
-      data: { ...userSave, password: '' },
-    };
+      data: {
+        ...userSave,
+        password: '',
+      },
+    } as UserResponseDto;
   }
-  async getUsers(): Promise<User[]> {
-    return this.userRepository.getUsers();
+  async getUsers(): Promise<GetUsersResponseDto> {
+    const users = await this.userRepository.getUsers();
+    return {
+      success: true,
+      data: users,
+    } as GetUsersResponseDto;
   }
-  async getUser(id: number): Promise<User> {
+  async getUser(id: string): Promise<UserResponseDto> {
     const user = await this.userRepository.getUser(id);
 
     return {
       success: true,
-      data,
+      data: { ...user, password: '' },
+    } as UserResponseDto;
+  }
+  async updateUser(id: string, userUdate: User): Promise<UserResponseDto> {
+    const user = await this.userRepository.updateUser(id, userUdate);
+    return {
+      success: true,
+      data: { ...user, password: '' },
+    } as UserResponseDto;
+  }
+  async deleteUser(id: string): Promise<SuccessResponseDto> {
+    const user = await this.userRepository.deleteUser(id);
+    return {
+      success: true,
     };
-  }
-  async updateUser(user: User): Promise<User> {
-    return this.userRepository.updateUser(user);
-  }
-  async deleteUser(id: number): Promise<void> {
-    return this.userRepository.deleteUser(id);
   }
 }

@@ -3,7 +3,8 @@ import { CreateUserDto } from '../../applications/dtos/crear-user.dto';
 import { User } from '../../domain/entities/user.entity';
 import { UserRepositoryPort } from '../../domain/port/user-repository.port';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
+import { UpdateUserDto } from '../../applications/dtos/update-user.dto';
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -18,11 +19,11 @@ export class UserRepository implements UserRepositoryPort {
       role: 'user',
       isActive: true,
     });
-    return user;
+    return user as User;
   }
 
   async getUsers(): Promise<User[]> {
-    return this.userRepository.find({
+    const users = this.userRepository.find({
       select: {
         id: true,
         email: true,
@@ -35,21 +36,29 @@ export class UserRepository implements UserRepositoryPort {
         photo: true,
         role: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
+
+    return users;
   }
 
-  async getUser(id: string): Promise<User> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    console.log({ updateUserDto });
+    await this.userRepository.update(id, {
+      ...updateUserDto,
+    });
     return this.userRepository.findOne({
       where: { id },
     });
   }
 
-  async updateUser(user: User): Promise<User> {
-    return this.userRepository.save(user);
-  }
   async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async getUser(id: string): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async findByEmail(email: string): Promise<User | null> {

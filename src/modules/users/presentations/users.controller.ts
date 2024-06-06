@@ -5,15 +5,20 @@ import {
   Get,
   Inject,
   Injectable,
+  Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from '../applications/dtos/crear-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { USER_SERVICE_TOKEN } from '../provider.token';
 import { UserServiceInterface } from '../domain/services/user-service.interface';
 import { User } from '../domain/entities/user.entity';
-import { ResponseCreateUserDto } from '../applications/dtos/response-create-user.dto';
+import { UserResponseDto } from '../applications/dtos/create-user-response.dto';
+import { GetUsersResponseDto } from '../applications/dtos/get-users-response.dto';
+import { SuccessResponseDto } from '../applications/dtos/success-response.dto';
+import { UpdateUserDto } from '../applications/dtos/update-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -27,47 +32,49 @@ export class UsersController {
   @Post()
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [ResponseCreateUserDto],
+    type: UserResponseDto,
   })
-  async create(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<ResponseCreateUserDto> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return this.userService.createUser(createUserDto);
   }
 
   @Get()
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [User],
+    type: GetUsersResponseDto,
   })
-  async getUsers(): Promise<User[]> {
+  async getUsers(): Promise<GetUsersResponseDto> {
     return this.userService.getUsers();
   }
 
   @Get(':id')
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [User],
+    type: UserResponseDto,
   })
-  async getUser(id: number): Promise<User> {
+  async getUser(@Param('id') id: string): Promise<UserResponseDto> {
     return this.userService.getUser(id);
   }
 
   @Put(':id')
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [User],
+    type: UserResponseDto,
   })
-  async updateUser(@Body() user: User): Promise<User> {
-    return this.userService.updateUser(user);
+  async updateUser(
+    @Param('id') id: string,
+    @Body() user: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    console.log({ user, id });
+    return this.userService.updateUser(id, user);
   }
 
   @Delete(':id')
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
-    type: [User],
+    type: SuccessResponseDto,
   })
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(@Param('id') id: string): Promise<SuccessResponseDto> {
     return this.userService.deleteUser(id);
   }
 }
