@@ -9,9 +9,10 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from '../applications/dtos/crear-user.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { USER_SERVICE_TOKEN } from '../provider.token';
 import { UserServiceInterface } from '../domain/services/user-service.interface';
 import { User } from '../domain/entities/user.entity';
@@ -19,6 +20,7 @@ import { UserResponseDto } from '../applications/dtos/create-user-response.dto';
 import { GetUsersResponseDto } from '../applications/dtos/get-users-response.dto';
 import { SuccessResponseDto } from '../applications/dtos/success-response.dto';
 import { UpdateUserDto } from '../applications/dtos/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Users')
 @Controller('users')
@@ -39,6 +41,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: GetUsersResponseDto,

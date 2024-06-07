@@ -43,7 +43,7 @@ export class Video {
   isPublic: boolean;
 
   @Column()
-  userId: number;
+  userId: string;
 
   @ManyToOne(() => User, (user) => user.videos)
   @JoinColumn({ name: 'userId' })
