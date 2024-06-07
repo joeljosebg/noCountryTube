@@ -34,7 +34,7 @@ export class IterationVideoController {
     type: SaveLikeVideoResponseDto,
   })
   saveLike(@Body() saveLike: SaveLikeVideoWithUserDto) {
-    const userId = 1;
+    const userId = '1';
     return this.iterationVideoService.saveLike({ ...saveLike, userId });
   }
   @Post('save-dislike')
@@ -43,7 +43,7 @@ export class IterationVideoController {
     type: SaveDisLikeVideoResponseDto,
   })
   saveDisLike(@Body() saveDisLike: SaveDisLikeVideoWithUserDto) {
-    const userId = 1;
+    const userId = '1';
     return this.iterationVideoService.saveDisLike({ ...saveDisLike, userId });
   }
 
@@ -53,7 +53,7 @@ export class IterationVideoController {
     type: GetVideoIterationsResponseDto,
   })
   getVideoIterations() {
-    const userId = 1;
+    const userId = '1';
     return this.iterationVideoService.getVideoIterations(userId);
   }
 }

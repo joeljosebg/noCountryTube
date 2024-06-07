@@ -18,7 +18,7 @@ export class IterationVideoRepository implements IterationVideoRepositoryPort {
     @InjectRepository(Video) private videoRepository: Repository<Video>,
   ) {}
 
-  async getVideoIterations(userId: number): Promise<IterationVideo[]> {
+  async getVideoIterations(userId: string): Promise<IterationVideo[]> {
     return this.iterationVideoRepository.find({
       where: { userId },
       relations: ['video'],

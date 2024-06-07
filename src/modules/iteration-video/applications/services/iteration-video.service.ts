@@ -43,7 +43,7 @@ export class IterationVideoService implements IterationVideoServiceInterface {
     };
   }
   async getVideoIterations(
-    userId: number,
+    userId: string,
   ): Promise<GetVideoIterationsResponseDto> {
     const iterationsVideo: IterationVideo[] =
       await this.iterationVideoRepository.getVideoIterations(userId);

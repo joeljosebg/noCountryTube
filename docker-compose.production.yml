@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - PORT=${PORT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - ADMINISTRATOR_PASSWORD=${ADMINISTRATOR_PASSWORD}
+      - ADMINISTRATOR_USERNAME=${ADMINISTRATOR_USERNAME}
+      - ADMINISTRATOR_EMAIL=${ADMINISTRATOR_EMAIL}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - CLOUD_NAME=${CLOUD_NAME}
+      - CLOUDINARY_KEY=${CLOUDINARY_KEY}
+      - CLOUDINARY_SECRET=${CLOUDINARY_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - .env.production
