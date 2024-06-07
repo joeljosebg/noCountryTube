@@ -74,6 +74,7 @@ export class UserService implements UserServiceInterface {
       data: { ...user, password: '' },
     } as UserResponseDto;
   }
+
   async deleteUser(id: string): Promise<SuccessResponseDto> {
     const user = await this.userRepository.deleteUser(id);
     return {
@@ -82,5 +83,19 @@ export class UserService implements UserServiceInterface {
   }
   async findByEmail(email: string): Promise<User> {
     return await this.userRepository.findByEmail(email);
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return await this.userRepository.findByUsername(username);
+  }
+
+  async verifyEmail(email: string): Promise<boolean> {
+    const user = await this.userRepository.findByEmail(email);
+    return user !== null;
+  }
+
+  async verifyUsername(username: string): Promise<boolean> {
+    const user = await this.userRepository.findByUsername(username);
+    return user !== null;
   }
 }

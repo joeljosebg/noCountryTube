@@ -21,8 +21,8 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usersService.findByUsername(username);
     console.log({ user, password: user.password });
     if (user) {
       const compare = await bcrypt.compare(password, user.password);
@@ -42,11 +42,12 @@ export class AuthService {
   }
 
   async login(user: User) {
-    console.log({
-      login: true,
-      user,
-    });
-    const payload = { userId: user.id, email: user.email, sub: user.id };
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      sub: user.id,
+      role: user.role,
+    };
     const accessTokenExpiresIn = 24 * 60 * 60; // Tiempo en segundos
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: accessTokenExpiresIn,
@@ -68,6 +69,7 @@ export class AuthService {
       id: user.id,
       accessTokenExpiry,
       refreshTokenExpiry,
+      role: user.role,
     };
   }
 

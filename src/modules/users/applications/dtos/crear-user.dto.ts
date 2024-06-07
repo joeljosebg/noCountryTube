@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsDate, IsDateString, IsEmail, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import {
+  IsDate,
+  IsDateString,
+  IsEmail,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'username' })
@@ -13,7 +19,11 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({ example: 'password' })
-  @IsString()
+  @Transform(({ value }) => value.toLowerCase())
+  @Matches(/^[a-z0-9._]+$/, {
+    message:
+      'Username must contain only lowercase letters, numbers, dots, and underscores.',
+  })
   password: string;
 
   @ApiProperty({ example: 'lastName' })

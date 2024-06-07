@@ -9,10 +9,16 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from '../applications/dtos/crear-user.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { USER_SERVICE_TOKEN } from '../provider.token';
 import { UserServiceInterface } from '../domain/services/user-service.interface';
 import { User } from '../domain/entities/user.entity';
@@ -21,6 +27,10 @@ import { GetUsersResponseDto } from '../applications/dtos/get-users-response.dto
 import { SuccessResponseDto } from '../applications/dtos/success-response.dto';
 import { UpdateUserDto } from '../applications/dtos/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '@/modules/common/decorators/roles.decorator';
+import { RolesGuard } from '@/modules/common/guards/roles.guard';
+import { VerifyEmailDto } from '../applications/dtos/verify-email-dto';
+import { VerifyUsernameDto } from '../applications/dtos/verify-username-dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -32,6 +42,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Para registrar nuevos usuarios' })
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: UserResponseDto,
@@ -40,9 +51,33 @@ export class UsersController {
     return this.userService.createUser(createUserDto);
   }
 
+  @Post('verifiy-email')
+  @ApiOperation({ summary: 'Verificar si el email esta registrado' })
+  @ApiOkResponse({
+    description: 'Returns true if the email has been successfully verified.',
+    type: Boolean,
+  })
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto): Promise<boolean> {
+    return this.userService.verifyEmail(verifyEmailDto.email);
+  }
+
+  @Post('verifiy-username')
+  @ApiOperation({ summary: 'Verificar si el username esta registrado' })
+  @ApiOkResponse({
+    description: 'Returns true if the email has been successfully verified.',
+    type: Boolean,
+  })
+  async verifyUsername(
+    @Body() verifyUsernameDto: VerifyUsernameDto,
+  ): Promise<boolean> {
+    return this.userService.verifyUsername(verifyUsernameDto.username);
+  }
+
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Obtener todos los usuarios registrados' })
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: GetUsersResponseDto,
@@ -51,7 +86,24 @@ export class UsersController {
     return this.userService.getUsers();
   }
 
+  @Get('profile')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Obtener la informacion de un usuario' })
+  @ApiOkResponse({
+    description: 'Returns the user has been successfully created.',
+    type: GetUsersResponseDto,
+  })
+  async getUserProfile(@Req() req): Promise<UserResponseDto> {
+    return this.userService.getUser(req.user.userId);
+  }
+
   @Get(':id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiOperation({
+    summary: 'Obtener la informacion de un usuario en especifico',
+  })
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: UserResponseDto,
@@ -61,6 +113,9 @@ export class UsersController {
   }
 
   @Put(':id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiOperation({ summary: 'Actualizar un usuario en especifico' })
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: UserResponseDto,
@@ -74,6 +129,9 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiOperation({ summary: 'Eliminar un usuario' })
   @ApiOkResponse({
     description: 'Returns the user has been successfully created.',
     type: SuccessResponseDto,
