@@ -23,9 +23,9 @@ export class User extends BaseEntity {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'username' })
+  @ApiProperty({ example: 'userName' })
   @Column({ unique: true })
-  username: string;
+  userName: string;
 
   @ApiProperty({ example: 'firstName' })
   @Column()

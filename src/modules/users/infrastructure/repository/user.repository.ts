@@ -27,7 +27,7 @@ export class UserRepository implements UserRepositoryPort {
       select: {
         id: true,
         email: true,
-        username: true,
+        userName: true,
         firstName: true,
         lastName: true,
         birthday: true,
@@ -67,9 +67,9 @@ export class UserRepository implements UserRepositoryPort {
     });
   }
 
-  async findByUsername(username: string): Promise<User | null> {
+  async findByUsername(userName: string): Promise<User | null> {
     return this.userRepository.findOne({
-      where: { username },
+      where: { userName },
     });
   }
 }

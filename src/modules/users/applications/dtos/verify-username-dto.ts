@@ -3,11 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyUsernameDto {
   @ApiProperty({
-    example: 'username',
-    description: 'The username to verify',
+    example: 'userName',
+    description: 'The userName to verify',
     required: true,
   })
   @IsEmail()
   @IsNotEmpty()
-  username: string;
+  userName: string;
 }

@@ -11,86 +11,79 @@ import { VideoDatailsResponse } from '@/modules/videos/domain/responses/video-de
 import { PaginationDto } from '../../../../common/dtos/pagination.dto';
 
 @Injectable()
-export class VideoRepositoryImpl implements VideoRepositoryPort{
+export class VideoRepositoryImpl implements VideoRepositoryPort {
+  constructor(
+    @InjectRepository(Video)
+    private videoRepository: Repository<Video>,
 
-    constructor(
+    @Inject(UPLOAD_FILE_REPOSITORY)
+    private uploadFileRepository: UploadFileRepositoryPort,
+  ) {}
 
-        @InjectRepository(Video)
-        private videoRepository: Repository<Video>,
+  async createVideo(
+    createVideoDto: CreateVideoDto,
+    videoPath: string,
+    miniaturePath: string,
+  ): Promise<VideoResponse<Video>> {
+    const videoUrl = await this.uploadFileRepository.uploadVideo(
+      videoPath,
+      'videos',
+    );
+    const miniatureUrl = await this.uploadFileRepository.uploadImage(
+      miniaturePath,
+      'images',
+    );
 
-        @Inject(UPLOAD_FILE_REPOSITORY)
-        private uploadFileRepository: UploadFileRepositoryPort
+    const videoDb = this.videoRepository.create({
+      ...createVideoDto,
 
-    ){}
+      videoUrl: videoUrl,
+      miniatureUrl: miniatureUrl,
+    });
+    await this.videoRepository.save(videoDb);
 
+    const dataResponse = new VideoResponse<Video>(
+      true,
+      'Created video',
+      videoDb,
+    );
 
-    
+    return dataResponse;
+  }
 
+  async getAllVideos(
+    paginationDto: PaginationDto,
+  ): Promise<VideoResponse<VideoDatailsResponse[]>> {
+    const { limit = 9, offset = 0 } = paginationDto;
 
-    async createVideo(createVideoDto: CreateVideoDto, videoPath: string, miniaturePath: string): Promise<VideoResponse<Video>> {
-        
+    const videos = await this.videoRepository.find({
+      take: limit,
+      skip: offset,
+      relations: {
+        user: true,
+      },
+    });
 
-        const videoUrl = await this.uploadFileRepository.uploadVideo(videoPath, 'videos');
-        const miniatureUrl = await this.uploadFileRepository.uploadImage(miniaturePath, 'images')
+    const videoDetail = videos.map((video) => {
+      const { id, title, videoUrl, miniatureUrl, description, duration } =
+        video;
+      const { user } = video;
 
-        const videoDb = this.videoRepository.create(
-            {
-                ...createVideoDto,
-            
-                videoUrl: videoUrl,
-                miniatureUrl: miniatureUrl
-            }
-        );
-        await this.videoRepository.save(videoDb);
-        
-        const dataResponse = new VideoResponse<Video>(
-            true,
-            'Created video',
-            videoDb
-        );
+      console.log(user.userName);
 
-        return dataResponse;
-    }
+      return VideoDatailsResponse.fromObject({
+        id,
+        title,
+        videoUrl,
+        miniatureUrl,
+        description,
+        duration,
+        nameUser: user.userName,
+      });
+    });
 
+    const response = new VideoResponse(true, 'All videos', videoDetail);
 
-    async getAllVideos(paginationDto: PaginationDto): Promise<VideoResponse<VideoDatailsResponse[]>> {
-
-        const { limit = 9, offset = 0 } = paginationDto;
-
-        const videos = await this.videoRepository.find({
-            take: limit,
-            skip: offset,
-            relations: {
-                user: true
-            }
-        });
-
-        const videoDetail = videos.map(video => {
-
-            const {id, title, videoUrl, miniatureUrl, description, duration } = video;
-            const { user } = video;
-
-            console.log(user.username);
-            
-            return VideoDatailsResponse.fromObject({
-                id,
-                title,
-                videoUrl,
-                miniatureUrl,
-                description,
-                duration,
-                nameUser: user.username
-            });
-        });
-
-        const response = new VideoResponse(
-            true,
-            'All videos',
-            videoDetail
-        );
-
-        return response;
-    }
-
-
+    return response;
+  }
 }

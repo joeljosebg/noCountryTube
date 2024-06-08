@@ -4,7 +4,7 @@ import { IsString, Matches } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty({
-    example: 'username',
+    example: 'userName',
     description: 'The username of the User',
   })
   @Transform(({ value }) => value.toLowerCase())
@@ -12,7 +12,7 @@ export class LoginDto {
     message:
       'Username must contain only lowercase letters, numbers, dots, and underscores.',
   })
-  username: string;
+  userName: string;
 
   @ApiProperty({ example: 'password', description: 'The password of the User' })
   @IsString()

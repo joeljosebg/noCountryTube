@@ -62,7 +62,7 @@ export class UsersController {
   }
 
   @Post('verifiy-username')
-  @ApiOperation({ summary: 'Verificar si el username esta registrado' })
+  @ApiOperation({ summary: 'Verificar si el userName esta registrado' })
   @ApiOkResponse({
     description: 'Returns true if the email has been successfully verified.',
     type: Boolean,
@@ -70,7 +70,7 @@ export class UsersController {
   async verifyUsername(
     @Body() verifyUsernameDto: VerifyUsernameDto,
   ): Promise<boolean> {
-    return this.userService.verifyUsername(verifyUsernameDto.username);
+    return this.userService.verifyUsername(verifyUsernameDto.userName);
   }
 
   @Get()

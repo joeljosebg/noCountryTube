@@ -3,10 +3,10 @@ import { Type } from 'class-transformer';
 import { IsDate, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
-  @ApiPropertyOptional({ example: 'username' })
+  @ApiPropertyOptional({ example: 'userName' })
   @IsOptional()
   @IsString()
-  username?: string;
+  userName?: string;
 
   @ApiPropertyOptional({ example: 'email' })
   @IsOptional()

@@ -31,7 +31,7 @@ export class UserService implements UserServiceInterface {
     }
 
     const userUsername = await this.userRepository.findByUsername(
-      user.username,
+      user.userName,
     );
     if (userUsername) {
       throw new BadRequestException('Error creating user', {
@@ -85,8 +85,8 @@ export class UserService implements UserServiceInterface {
     return await this.userRepository.findByEmail(email);
   }
 
-  async findByUsername(username: string): Promise<User> {
-    return await this.userRepository.findByUsername(username);
+  async findByUsername(userName: string): Promise<User> {
+    return await this.userRepository.findByUsername(userName);
   }
 
   async verifyEmail(email: string): Promise<boolean> {
@@ -94,8 +94,8 @@ export class UserService implements UserServiceInterface {
     return user !== null;
   }
 
-  async verifyUsername(username: string): Promise<boolean> {
-    const user = await this.userRepository.findByUsername(username);
+  async verifyUsername(userName: string): Promise<boolean> {
+    const user = await this.userRepository.findByUsername(userName);
     return user !== null;
   }
 }
