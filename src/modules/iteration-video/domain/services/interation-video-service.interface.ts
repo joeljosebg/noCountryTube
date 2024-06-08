@@ -15,5 +15,5 @@ export interface IterationVideoServiceInterface {
   saveDisLike(
     saveDisLike: SaveDisLikeVideoWithUserDto,
   ): Promise<SaveDisLikeVideoResponseDto>;
-  getVideoIterations(userId: number): Promise<GetVideoIterationsResponseDto>;
+  getVideoIterations(userId: string): Promise<GetVideoIterationsResponseDto>;
 }

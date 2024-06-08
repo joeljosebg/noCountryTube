@@ -7,5 +7,5 @@ export interface IterationVideoRepositoryPort {
   saveDisLike(
     saveDisLike: SaveDisLikeVideoWithUserDto,
   ): Promise<IterationVideo>;
-  getVideoIterations(userId: number): Promise<IterationVideo[]>;
+  getVideoIterations(userId: string): Promise<IterationVideo[]>;
 }

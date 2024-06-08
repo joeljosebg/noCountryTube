@@ -4,9 +4,8 @@ import { Type } from 'class-transformer';
 
 export class SaveDisLikeVideoDto {
   @ApiProperty({ example: 1 })
-  @IsNumber()
-  @Type(() => Number)
-  videoId: number;
+  @IsString()
+  videoId: string;
 
   @ApiProperty({ example: true })
   @IsBoolean()
@@ -14,7 +13,7 @@ export class SaveDisLikeVideoDto {
 }
 
 export class SaveDisLikeVideoWithUserDto extends SaveDisLikeVideoDto {
-  userId: number;
+  userId: string;
 }
 
 export class SaveDisLikeVideoResponseDto {

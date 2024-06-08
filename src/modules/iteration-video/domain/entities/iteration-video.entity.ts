@@ -14,9 +14,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class IterationVideo extends BaseEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @ApiProperty({ example: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty({ example: true })
   @Column({ default: false })
@@ -28,11 +28,11 @@ export class IterationVideo extends BaseEntity {
 
   @ApiProperty({ example: 1 })
   @Column()
-  videoId: number;
+  videoId: string;
 
   @ApiProperty({ example: 1 })
   @Column()
-  userId: number;
+  userId: string;
 
   @ApiProperty({ type: () => Video })
   @ManyToOne(() => Video, (video) => video.interactions)

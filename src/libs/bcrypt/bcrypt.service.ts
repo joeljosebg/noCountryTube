@@ -10,7 +10,7 @@ export class BcryptService implements IBcryptService {
     return bcrypt.hash(password, this.saltRounds);
   }
 
-  async comparePssword(password: string, hash: string): Promise<boolean> {
+  async comparePassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
 }
