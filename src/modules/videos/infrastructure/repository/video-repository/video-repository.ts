@@ -7,6 +7,8 @@ import { VideoResponse } from 'src/modules/videos/domain/responses/video-respons
 import { Repository } from 'typeorm';
 import { UPLOAD_FILE_REPOSITORY } from 'src/modules/upload-files/provider.token';
 import { UploadFileRepositoryPort } from 'src/modules/upload-files/domain/ports/upload-file-repository';
+import { VideoDatailsResponse } from '@/modules/videos/domain/responses/video-details-response';
+import { PaginationDto } from '../../../../common/dtos/pagination.dto';
 
 @Injectable()
 export class VideoRepositoryImpl implements VideoRepositoryPort{
@@ -22,15 +24,19 @@ export class VideoRepositoryImpl implements VideoRepositoryPort{
     ){}
 
 
+    
+
+
     async createVideo(createVideoDto: CreateVideoDto, videoPath: string, miniaturePath: string): Promise<VideoResponse<Video>> {
         
 
         const videoUrl = await this.uploadFileRepository.uploadVideo(videoPath, 'videos');
         const miniatureUrl = await this.uploadFileRepository.uploadImage(miniaturePath, 'images')
 
-        const videoDb =this.videoRepository.create(
+        const videoDb = this.videoRepository.create(
             {
                 ...createVideoDto,
+            
                 videoUrl: videoUrl,
                 miniatureUrl: miniatureUrl
             }
@@ -44,6 +50,46 @@ export class VideoRepositoryImpl implements VideoRepositoryPort{
         );
 
         return dataResponse;
+    }
+
+
+    async getAllVideos(paginationDto: PaginationDto): Promise<VideoResponse<VideoDatailsResponse[]>> {
+
+        const { limit = 9, offset = 0 } = paginationDto;
+
+        const videos = await this.videoRepository.find({
+            take: limit,
+            skip: offset,
+            relations: {
+                user: true
+            }
+        });
+
+        const videoDetail = videos.map(video => {
+
+            const {id, title, videoUrl, miniatureUrl, description, duration } = video;
+            const { user } = video;
+
+            console.log(user.username);
+            
+            return VideoDatailsResponse.fromObject({
+                id,
+                title,
+                videoUrl,
+                miniatureUrl,
+                description,
+                duration,
+                nameUser: user.username
+            });
+        });
+
+        const response = new VideoResponse(
+            true,
+            'All videos',
+            videoDetail
+        );
+
+        return response;
     }
 
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
+import {  IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateVideoDto {
 
@@ -21,7 +21,11 @@ export class CreateVideoDto {
     description: string;
 
     @ApiProperty({ required: true })
-    @IsNumber()
+    @IsString()
+    duration: string;
+
+    @ApiProperty({ required: false })
+    @IsString()
     userId: string;
 
 }

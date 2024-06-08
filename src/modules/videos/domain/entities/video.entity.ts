@@ -32,10 +32,10 @@ export class Video {
   })
   description?: string;
 
-  @Column('numeric', {
-    nullable: true,
+  @Column('text', {
+    nullable: false,
   })
-  duration?: number;
+  duration?: string;
 
   @Column('bool', {
     default: true,

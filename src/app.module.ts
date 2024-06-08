@@ -12,6 +12,7 @@ import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
 import { UploadFilesModule } from './modules/upload-files/upload-files.module';
 import { BcryptModule } from './libs/bcrypt/bcrypt.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CommonModule } from './modules/common/common.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './modules/auth/auth.module';
     UploadFilesModule,
     BcryptModule,
     AuthModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

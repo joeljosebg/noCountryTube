@@ -1,11 +1,15 @@
-import { BadRequestException, Body, Controller, Get, Inject, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Inject, Post, Query, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateVideoDto } from '../aplication/dtos/create-video.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { fileFilter } from './helpers/fileFilter';
 import { VIDEO_SERVICE_TOKEN } from '../provider.token';
 import { VideoService } from '../domain/services/video-service';
-import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { VideoDatailsResponse } from '../domain/responses/video-details-response';
+import { VideoResponse } from '../domain/responses/video-response';
+import { PaginationDto } from '@/modules/common/dtos/pagination.dto';
 
 
 @ApiTags('videos')
@@ -25,7 +29,6 @@ export class VideosController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiOperation({ summary: 'Create a video' })
   @ApiConsumes('multipart/form-data')
-
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -42,17 +45,31 @@ export class VideosController {
     ),
   )
   
+  
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   createVideo(
     @Body() createVideoDto: CreateVideoDto,
+    @Req() req,
     @UploadedFiles()
     files: { video: Express.Multer.File; miniature: Express.Multer.File },
   ) {
     if (!files.video) throw new BadRequestException('Video is required.');
+
+    createVideoDto.userId = req.user.userId;
     return this.videoService.createVideo(createVideoDto, files.video[0].path, files.miniature[0].path);
   }
 
   @Get()
-  findAll(): string {
-    return 'This action returns all videos';
+  @ApiOperation({ summary: 'Retrieve all videos with pagination' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful retrieval of videos.',
+    type: VideoResponse,
+  })
+  @ApiQuery({ name: 'offset', required: false, description: 'The number of items to skip before starting to collect the result set.' })
+  @ApiQuery({ name: 'limit', required: false, description: 'The number of items to return.' })
+  findAll( @Query() paginationDto: PaginationDto): Promise<VideoResponse<VideoDatailsResponse[]>> {
+    return this.videoService.getAllVideos(paginationDto);
   }
 }

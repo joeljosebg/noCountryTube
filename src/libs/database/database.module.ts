@@ -19,7 +19,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           password: config.get('password'),
           database: config.get('database'),
           autoLoadEntities: true,
-          synchronize: false,
+          synchronize: true,
           logging: true,
           entities: ['src/modules/**/domain/entity/*.ts'],
           migrations: ['src/migration/**/*.ts'],
