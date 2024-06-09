@@ -67,6 +67,11 @@ export class UserRepository implements UserRepositoryPort {
     });
   }
 
+  async findByUsername(userName: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { userName },
+    });
+  }
   async updatePassword(id: string, password: string): Promise<User> {
     await this.userRepository.update(id, {
       password,
