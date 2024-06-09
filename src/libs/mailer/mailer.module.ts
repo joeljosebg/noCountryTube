@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mailer.service';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 export const MAIL_SERVICE_TOKEN = Symbol('MailServiceToken');
@@ -12,11 +12,23 @@ export const MAIL_SERVICE_TOKEN = Symbol('MailServiceToken');
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const templatesDir =
-          process.env.NODE_ENV === 'production' ||
-          process.env.NODE_ENV === 'development'
-            ? join(__dirname, '..', 'libs', 'mailer', 'email-templates')
-            : join(__dirname, 'email-templates');
+        const nodeEnv = process.env.NODE_ENV;
+
+        let templatesDir;
+        if (nodeEnv === 'production' || nodeEnv === 'development') {
+          templatesDir = join(__dirname, 'libs', 'mailer', 'email-templates');
+        } else {
+          templatesDir = join(
+            process.cwd(),
+            'src',
+            'libs',
+            'mailer',
+            'email-templates',
+          );
+        }
+
+        console.log(`Templates Directory: ${templatesDir}`);
+
         return {
           transport: {
             host: configService.get<string>('smtpHost'),
