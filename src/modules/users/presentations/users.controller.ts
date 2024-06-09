@@ -21,7 +21,6 @@ import {
 } from '@nestjs/swagger';
 import { USER_SERVICE_TOKEN } from '../provider.token';
 import { UserServiceInterface } from '../domain/services/user-service.interface';
-import { User } from '../domain/entities/user.entity';
 import { UserResponseDto } from '../applications/dtos/create-user-response.dto';
 import { GetUsersResponseDto } from '../applications/dtos/get-users-response.dto';
 import { SuccessResponseDto } from '../applications/dtos/success-response.dto';
@@ -31,6 +30,18 @@ import { Roles } from '@/modules/common/decorators/roles.decorator';
 import { RolesGuard } from '@/modules/common/guards/roles.guard';
 import { VerifyEmailDto } from '../applications/dtos/verify-email-dto';
 import { VerifyUsernameDto } from '../applications/dtos/verify-username-dto';
+import {
+  ResetPasswordDto,
+  ResetPasswordResponseDto,
+} from '../applications/dtos/reset-password.dto';
+import {
+  ValidateCodeDto,
+  ValidateCodeResponseDto,
+} from '../applications/dtos/validate-code.dto';
+import {
+  NewPasswordDto,
+  NewPasswordResponseDto,
+} from '../applications/dtos/new-password.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -71,6 +82,43 @@ export class UsersController {
     @Body() verifyUsernameDto: VerifyUsernameDto,
   ): Promise<boolean> {
     return this.userService.verifyUsername(verifyUsernameDto.userName);
+  }
+
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Genera y envia un token al Correo electronico' })
+  @ApiOkResponse({
+    description: 'Retorna que la operacion fue exitosa.',
+    type: ResetPasswordResponseDto,
+  })
+  async resetPasswordEmail(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<ResetPasswordResponseDto> {
+    return this.userService.resetPasswordEmail(resetPasswordDto);
+  }
+
+  @Post('validate-code')
+  @ApiOperation({ summary: 'Valida el token para cambiar el password' })
+  @ApiOkResponse({
+    description: 'Retorna que la operacion fue exitosa.',
+    type: ValidateCodeResponseDto,
+  })
+  async validateCode(
+    @Body() ValidateCodeDto: ValidateCodeDto,
+  ): Promise<ValidateCodeResponseDto> {
+    return this.userService.validateCode(ValidateCodeDto);
+  }
+
+  @Post('new-password')
+  @ApiOperation({ summary: 'Crea una nueva contraseña' })
+  @ApiOkResponse({
+    description: 'Retorna que la operacion fue exitosa.',
+    type: NewPasswordResponseDto,
+  })
+  async newPassword(
+    @Body() newPasswordDto: NewPasswordDto,
+  ): Promise<NewPasswordResponseDto> {
+    console.log({ newPasswordDto });
+    return this.userService.newPassword(newPasswordDto);
   }
 
   @Get()

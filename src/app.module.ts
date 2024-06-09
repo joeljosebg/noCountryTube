@@ -13,6 +13,8 @@ import { UploadFilesModule } from './modules/upload-files/upload-files.module';
 import { BcryptModule } from './libs/bcrypt/bcrypt.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommonModule } from './modules/common/common.module';
+import { MailModule } from './libs/mailer/mailer.module';
+import { CacheModule } from './libs/cache/cache.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { CommonModule } from './modules/common/common.module';
     BcryptModule,
     AuthModule,
     CommonModule,
+    MailModule,
+    CacheModule,
   ],
   controllers: [],
   providers: [],

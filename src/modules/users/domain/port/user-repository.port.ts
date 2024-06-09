@@ -10,4 +10,5 @@ export interface UserRepositoryPort {
   getUsers(): Promise<User[]>;
   findByEmail(email: string): Promise<User | null>;
   findByUsername(userName: string): Promise<User | null>;
+  updatePassword(id: string, password: string): Promise<User>;
 }
