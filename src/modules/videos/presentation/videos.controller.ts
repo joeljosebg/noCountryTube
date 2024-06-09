@@ -5,6 +5,7 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Post,
   Query,
   Req,
@@ -32,7 +33,7 @@ import { diskStorage } from 'multer';
 import { CreateVideoDto } from '../aplication/dtos/create-video.dto';
 import { PaginationDto } from '@/modules/common/dtos/pagination.dto';
 import { VideoResponse } from '../domain/responses/video-response';
-import { VideoDatailsResponse } from '../domain/responses/video-details-response';
+import { VideoDetailsResponse } from '../domain/responses/video-details-response';
 
 
 @ApiTags('videos')
@@ -99,8 +100,35 @@ export class VideosController {
   })
   @ApiQuery({ name: 'offset', required: false, description: 'The number of items to skip before starting to collect the result set.' })
   @ApiQuery({ name: 'limit', required: false, description: 'The number of items to return.' })
-  findAll( @Query() paginationDto: PaginationDto): Promise<VideoResponse<VideoDatailsResponse[]>> {
+  findAll( @Query() paginationDto: PaginationDto): Promise<VideoResponse<VideoDetailsResponse[]>> {
     return this.videoService.getAllVideos(paginationDto);
   }
+
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get video by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get video by id',
+    type: VideoResponse,
+  })
+
+  findVideoById( @Param('id') id: string ): Promise<VideoResponse<VideoDetailsResponse>> {
+    return this.videoService.getVideoDetailById(id);
+  }
+
+
+  @Get('/search/:term')
+  @ApiOperation({ summary: 'Search videos' })
+  @ApiResponse({
+    status: 200,
+    description: 'Search videos',
+    type: VideoResponse,
+  })
+
+  searchVideos( @Param('term') term: string ): Promise<VideoResponse<VideoDetailsResponse[]>> {
+    return this.videoService.searchVideos(term);
+  }
+
 
 }

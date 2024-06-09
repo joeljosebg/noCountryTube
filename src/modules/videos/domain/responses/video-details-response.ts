@@ -1,4 +1,4 @@
-export class VideoDatailsResponse {
+export class VideoDetailsResponse {
 
     private constructor (
         public id: string,
@@ -11,7 +11,7 @@ export class VideoDatailsResponse {
     ){}
 
 
-    public static fromObject( object: {[key: string]: any} ): VideoDatailsResponse {
+    public static fromObject( object: {[key: string]: any} ): VideoDetailsResponse {
         
         const { id, title, videoUrl, miniatureUrl, description,duration, nameUser,  } = object;
 
@@ -21,7 +21,7 @@ export class VideoDatailsResponse {
             throw new Error('error creating instance VideoDatailsResponse');
         }
 
-        return new VideoDatailsResponse(
+        return new VideoDetailsResponse(
             id,
             title,
             videoUrl,
