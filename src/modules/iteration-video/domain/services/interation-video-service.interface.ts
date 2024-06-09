@@ -6,7 +6,7 @@ import {
   SaveDisLikeVideoResponseDto,
   SaveDisLikeVideoWithUserDto,
 } from '@/modules/iteration-video/applications/dto/save-dislike-video.dto';
-import { GetVideoIterationsResponseDto } from '../../applications/dto/get-video-iterations.dto';
+import { GetVideoIterationsResponseDto } from '@/modules/iteration-video/applications/dto/get-video-iterations.dto';
 
 export interface IterationVideoServiceInterface {
   saveLike(

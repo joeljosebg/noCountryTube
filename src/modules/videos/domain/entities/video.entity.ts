@@ -1,3 +1,4 @@
+import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 import { User } from '@/modules/users/domain/entities/user.entity';
 import { Optional } from '@nestjs/common';
@@ -51,4 +52,7 @@ export class Video {
 
   @OneToMany(() => IterationVideo, (interactions) => interactions.video)
   interactions: IterationVideo[];
+
+  @OneToMany(() => CommentVideo, (interactions) => interactions.video)
+  comments: CommentVideo[];
 }
