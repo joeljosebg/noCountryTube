@@ -25,3 +25,10 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     env_file:
       - .env.production
+    depends_on:
+      - redis
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
