@@ -11,24 +11,31 @@ export const MAIL_SERVICE_TOKEN = Symbol('MailServiceToken');
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        transport: {
-          host: configService.get<string>('smtpHost'),
-          port: configService.get<number>('smtpPort'),
-          secure: false,
-          auth: {
-            user: configService.get<string>('smtpUsername'),
-            pass: configService.get<string>('smtpPassword'),
+      useFactory: async (configService: ConfigService) => {
+        const templatesDir =
+          process.env.NODE_ENV === 'production' ||
+          process.env.NODE_ENV === 'development'
+            ? join(__dirname, '..', 'libs', 'mailer', 'email-templates')
+            : join(__dirname, 'email-templates');
+        return {
+          transport: {
+            host: configService.get<string>('smtpHost'),
+            port: configService.get<number>('smtpPort'),
+            secure: false,
+            auth: {
+              user: configService.get<string>('smtpUsername'),
+              pass: configService.get<string>('smtpPassword'),
+            },
           },
-        },
-        template: {
-          dir: join(__dirname, 'email-templates'),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
+          template: {
+            dir: templatesDir,
+            adapter: new HandlebarsAdapter(),
+            options: {
+              strict: true,
+            },
           },
-        },
-      }),
+        };
+      },
     }),
   ],
   providers: [
