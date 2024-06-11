@@ -3,10 +3,13 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
+  ParseUUIDPipe,
   Post,
+  Put,
   Query,
   Req,
   UploadedFiles,
@@ -34,6 +37,8 @@ import { CreateVideoDto } from '../aplication/dtos/create-video.dto';
 import { PaginationDto } from '@/modules/common/dtos/pagination.dto';
 import { VideoResponse } from '../domain/responses/video-response';
 import { VideoDetailsResponse } from '../domain/responses/video-details-response';
+import { UpdateVideoDto } from '../aplication/dtos/update-video.dto';
+import { boolean } from 'joi';
 
 
 @ApiTags('videos')
@@ -113,7 +118,7 @@ export class VideosController {
     type: VideoResponse,
   })
 
-  findVideoById( @Param('id') id: string ): Promise<VideoResponse<VideoDetailsResponse>> {
+  findVideoById( @Param('id', ParseUUIDPipe) id: string ): Promise<VideoResponse<VideoDetailsResponse>> {
     return this.videoService.getVideoDetailById(id);
   }
 
@@ -130,5 +135,30 @@ export class VideosController {
     return this.videoService.searchVideos(term);
   }
 
+
+  @Put()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Update a video' })
+  @ApiResponse({
+    status: 201,
+    description: 'Update a video',
+    type: boolean,
+  })
+  updateVideo( @Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto): Promise<boolean>{
+    return this.videoService.updateVideo(id, updateVideoDto);
+  }
+
+  @Delete()
+  @ApiOperation({ summary: 'Delete a video' })
+  @ApiResponse({
+    status: 201,
+    description: 'Delete a video',
+    type: boolean,
+  })
+
+  deleteVideo( @Param('id') id: string): Promise<boolean> {
+    return this.videoService.deleteVideo(id);
+  }
 
 }

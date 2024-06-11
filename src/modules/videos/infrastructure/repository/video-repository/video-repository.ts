@@ -9,9 +9,12 @@ import { UPLOAD_FILE_REPOSITORY } from 'src/modules/upload-files/provider.token'
 import { UploadFileRepositoryPort } from 'src/modules/upload-files/domain/ports/upload-file-repository';
 import { VideoDetailsResponse } from '@/modules/videos/domain/responses/video-details-response';
 import { PaginationDto } from '../../../../common/dtos/pagination.dto';
+import { UpdateVideoDto } from '@/modules/videos/aplication/dtos/update-video.dto';
 
 @Injectable()
 export class VideoRepositoryImpl implements VideoRepositoryPort {
+
+
   constructor(
     @InjectRepository(Video)
     private videoRepository: Repository<Video>,
@@ -19,6 +22,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     @Inject(UPLOAD_FILE_REPOSITORY)
     private uploadFileRepository: UploadFileRepositoryPort,
   ) {}
+  
   
   
 
@@ -92,6 +96,14 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
 
   }
 
+  async getVideoById(id: string): Promise<Video> {
+
+    const video = await this.videoRepository.findOneBy({ id: id});
+    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+    return video;
+
+  }
+
   async searchVideos(term: string): Promise<VideoResponse<VideoDetailsResponse[]>> {
 
     const queryBuilder = this.videoRepository.createQueryBuilder('video');
@@ -114,6 +126,29 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     
   }
 
+  async updateVideo(id: string, updateVideoDto: UpdateVideoDto): Promise<boolean> {
+
+    const video = await this.getVideoById(id);
+    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+
+    video.title = updateVideoDto.title;
+    video.description = updateVideoDto.description;
+    video.isPublic = updateVideoDto.isPublic;
+
+    await this.videoRepository.save(video);
+
+    return true;
+    
+  }
+
+  async deleteVideo(id: string): Promise<boolean> {
+    const video = await this.getVideoById(id);
+    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+
+    await this.videoRepository.remove(video);
+    return true;
+  }
+
   private getInstanceVideoDetailResponse( video: Video ): VideoDetailsResponse {
 
     const { id, title, videoUrl, miniatureUrl, description, duration } = video;
@@ -131,5 +166,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     });
 
   }
+
+  
 
 }
