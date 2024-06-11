@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { IterationVideoServiceInterface } from '../../domain/services/interation-video-service.interface';
+import { IterationVideoServiceInterface } from '@/modules/iteration-video/domain/services/interation-video-service.interface';
 import {
   SaveLikeVideoWithUserDto,
   SaveLikeVideoResponseDto,
-} from '../dto/save-like-video.dto';
-import { IterationVideoRepositoryPort } from '../../domain/ports/interation-video';
-import { ITERATION_VIDEO_REPOSITORY_TOKEN } from '../../provider.token';
+} from '@/modules/iteration-video/applications/dto/save-like-video.dto';
+import { IterationVideoRepositoryPort } from '@/modules/iteration-video/domain/ports/interation-video.port';
+import { ITERATION_VIDEO_REPOSITORY_TOKEN } from '@/modules/iteration-video/provider.token';
 import {
   SaveDisLikeVideoResponseDto,
   SaveDisLikeVideoWithUserDto,
-} from '../dto/save-dislike-video.dto';
-import { GetVideoIterationsResponseDto } from '../dto/get-video-iterations.dto';
-import { IterationVideo } from '../../domain/entities/iteration-video.entity';
+} from '@/modules/iteration-video/applications/dto/save-dislike-video.dto';
+import { GetVideoIterationsResponseDto } from '@/modules/iteration-video/applications/dto/get-video-iterations.dto';
+import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 
 @Injectable()
 export class IterationVideoService implements IterationVideoServiceInterface {

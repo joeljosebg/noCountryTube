@@ -16,4 +16,10 @@ export const configSchema = Joi.object({
   CLOUDINARY_KEY: Joi.string().required(),
   CLOUDINARY_SECRET: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
+  SMTP_HOST: Joi.string().required(),
+  SMTP_PORT: Joi.number().required(),
+  SMTP_USERNAME: Joi.string().required(),
+  SMTP_PASSWORD: Joi.string().required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.number().required(),
 });

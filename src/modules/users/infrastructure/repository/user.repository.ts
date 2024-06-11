@@ -72,4 +72,10 @@ export class UserRepository implements UserRepositoryPort {
       where: { userName },
     });
   }
+  async updatePassword(id: string, password: string): Promise<User> {
+    await this.userRepository.update(id, {
+      password,
+    });
+    return this.userRepository.findOne({ where: { id } }) as Promise<User>;
+  }
 }

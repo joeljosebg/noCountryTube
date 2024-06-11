@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 import { SaveLikeVideoWithUserDto } from '@/modules/iteration-video/applications/dto/save-like-video.dto';
-import { IterationVideoRepositoryPort } from '@/modules/iteration-video/domain/ports/interation-video';
+import { IterationVideoRepositoryPort } from '@/modules/iteration-video/domain/ports/interation-video.port';
 import { User } from '@/modules/users/domain/entities/user.entity';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { SaveDisLikeVideoWithUserDto } from '@/modules/iteration-video/applications/dto/save-dislike-video.dto';

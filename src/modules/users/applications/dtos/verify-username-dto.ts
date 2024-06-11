@@ -7,7 +7,6 @@ export class VerifyUsernameDto {
     description: 'The userName to verify',
     required: true,
   })
-  @IsEmail()
   @IsNotEmpty()
   userName: string;
 }

@@ -10,4 +10,10 @@ export interface ConfigInterface {
   cloudinary_key: string;
   cloudinary_secret: string;
   jwtSecret: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUsername: string;
+  smtpPassword: string;
+  redisHost: string;
+  redisPort: number;
 }

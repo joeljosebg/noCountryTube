@@ -1,3 +1,4 @@
+import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -71,6 +72,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => IterationVideo, (iterationVideo) => iterationVideo.user)
   interactionVideos: IterationVideo[];
+
+  @OneToMany(() => CommentVideo, (commentVideo) => commentVideo.user)
+  commentVideos: CommentVideo[];
 
   @ApiProperty({
     example: '2021-09-01T00:00:00.000Z',
