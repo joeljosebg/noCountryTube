@@ -157,6 +157,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       description,
       duration,
       comments,
+      createdAt,
     } = video;
     const { user } = video;
 
@@ -168,6 +169,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       description,
       duration,
       nameUser: user.userName,
+      createdAt: createdAt || new Date(),
       comments: comments.map((comment) => {
         return {
           id: comment.id,
