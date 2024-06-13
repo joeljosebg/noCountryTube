@@ -13,8 +13,6 @@ import { UpdateVideoDto } from '@/modules/videos/aplication/dtos/update-video.dt
 
 @Injectable()
 export class VideoRepositoryImpl implements VideoRepositoryPort {
-
-
   constructor(
     @InjectRepository(Video)
     private videoRepository: Repository<Video>,
@@ -22,9 +20,6 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     @Inject(UPLOAD_FILE_REPOSITORY)
     private uploadFileRepository: UploadFileRepositoryPort,
   ) {}
-  
-  
-  
 
   async createVideo(
     createVideoDto: CreateVideoDto,
@@ -63,19 +58,18 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     const { limit = 9, offset = 0 } = paginationDto;
 
     const videos = await this.videoRepository.find({
-      where: {isPublic: true},
+      where: { isPublic: true },
       take: limit,
       skip: offset,
       relations: {
         user: true,
-        comments: true,
+        comments: {
+          user: true,
+        },
       },
     });
 
-    
-
     const videoDetail = videos.map((video) => {
-      
       return this.getInstanceVideoDetailResponse(video);
     });
 
@@ -84,34 +78,34 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     return response;
   }
 
+  async getVideoDetailById(
+    idVideo: string,
+  ): Promise<VideoResponse<VideoDetailsResponse>> {
+    const video = await this.videoRepository.findOne({
+      where: { id: idVideo },
+      relations: { user: true },
+    });
 
-  async getVideoDetailById(idVideo: string): Promise<VideoResponse<VideoDetailsResponse>> {
-
-    const video = await this.videoRepository.findOne(
-      { where: { id: idVideo }, relations: { user: true} }
-    );
-
-    if( !video ) throw new NotFoundException(`Video with id ${idVideo} not found`);
+    if (!video)
+      throw new NotFoundException(`Video with id ${idVideo} not found`);
 
     const videoDetail = this.getInstanceVideoDetailResponse(video);
 
     const response = new VideoResponse(true, 'Video by id', videoDetail);
 
     return response;
-
   }
 
   async getVideoById(id: string): Promise<Video> {
+    const video = await this.videoRepository.findOne({ where: { id: id } });
 
-    const video = await this.videoRepository.findOne({where: {id: id}})
-
-    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+    if (!video) throw new NotFoundException(`Video with id ${id} not found`);
     return video;
-
   }
 
-  async searchVideos(term: string): Promise<VideoResponse<VideoDetailsResponse[]>> {
-
+  async searchVideos(
+    term: string,
+  ): Promise<VideoResponse<VideoDetailsResponse[]>> {
     const queryBuilder = this.videoRepository.createQueryBuilder('video');
 
     const videos = await queryBuilder
@@ -121,7 +115,6 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       .leftJoinAndSelect('video.user', 'userId')
       .getMany();
 
-
     const videoDetail = videos.map((video) => {
       return this.getInstanceVideoDetailResponse(video);
     });
@@ -129,14 +122,14 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     const response = new VideoResponse(true, 'All videos', videoDetail);
 
     return response;
-    
   }
 
-  async updateVideo(id: string, updateVideoDto: UpdateVideoDto): Promise<boolean> {
-
-
+  async updateVideo(
+    id: string,
+    updateVideoDto: UpdateVideoDto,
+  ): Promise<boolean> {
     const video = await this.getVideoById(id);
-    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+    if (!video) throw new NotFoundException(`Video with id ${id} not found`);
 
     video.title = updateVideoDto.title;
     video.description = updateVideoDto.description;
@@ -145,22 +138,27 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     await this.videoRepository.save(video);
 
     return true;
-    
   }
 
   async deleteVideo(id: string): Promise<boolean> {
     const video = await this.getVideoById(id);
-    if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
+    if (!video) throw new NotFoundException(`Video with id ${id} not found`);
 
     await this.videoRepository.remove(video);
     return true;
   }
 
-  private getInstanceVideoDetailResponse( video: Video ): VideoDetailsResponse {
-
-    const { id, title, videoUrl, miniatureUrl, description, duration, comments } = video;
+  private getInstanceVideoDetailResponse(video: Video): VideoDetailsResponse {
+    const {
+      id,
+      title,
+      videoUrl,
+      miniatureUrl,
+      description,
+      duration,
+      comments,
+    } = video;
     const { user } = video;
-
 
     return VideoDetailsResponse.fromObject({
       id,
@@ -170,11 +168,14 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       description,
       duration,
       nameUser: user.userName,
-      comments
+      comments: comments.map((comment) => {
+        return {
+          id: comment.id,
+          comment: comment.commentText,
+          createdAt: comment.createdAt,
+          userName: comment.user.userName,
+        };
+      }),
     });
-
   }
-
-  
-
 }
