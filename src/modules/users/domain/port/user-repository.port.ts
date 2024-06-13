@@ -7,6 +7,7 @@ export interface UserRepositoryPort {
   updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User>;
   deleteUser(id: string): Promise<void>;
   getUser(id: string): Promise<User>;
+  getUserProfileAndVideos(id: string): Promise<User>;
   getUsers(): Promise<User[]>;
   findByEmail(email: string): Promise<User | null>;
   findByUsername(userName: string): Promise<User | null>;

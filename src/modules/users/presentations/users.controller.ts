@@ -121,6 +121,20 @@ export class UsersController {
     return this.userService.newPassword(newPasswordDto);
   }
 
+  @Get('get-user-profile/:id')
+  @ApiOperation({
+    summary: 'Obtener la informacion de un usuario en especifico',
+  })
+  @ApiOkResponse({
+    description: 'Returns the user has been successfully created.',
+    type: UserResponseDto,
+  })
+  async getUserProfileAndVideos(
+    @Param('id') id: string,
+  ): Promise<UserResponseDto> {
+    return this.userService.getUserProfileAndVideos(id);
+  }
+
   @Get()
   @Roles('admin')
   @UseGuards(AuthGuard('jwt'), RolesGuard)

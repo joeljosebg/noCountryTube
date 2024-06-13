@@ -60,6 +60,12 @@ export class UserRepository implements UserRepositoryPort {
   async getUser(id: string): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
   }
+  async getUserProfileAndVideos(id: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: { id },
+      relations: ['videos'],
+    });
+  }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
