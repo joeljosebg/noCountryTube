@@ -63,14 +63,19 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     const { limit = 9, offset = 0 } = paginationDto;
 
     const videos = await this.videoRepository.find({
+      where: {isPublic: true},
       take: limit,
       skip: offset,
       relations: {
         user: true,
+        comments: true,
       },
     });
 
+    
+
     const videoDetail = videos.map((video) => {
+      
       return this.getInstanceVideoDetailResponse(video);
     });
 
@@ -98,7 +103,8 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
 
   async getVideoById(id: string): Promise<Video> {
 
-    const video = await this.videoRepository.findOneBy({ id: id});
+    const video = await this.videoRepository.findOne({where: {id: id}})
+
     if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
     return video;
 
@@ -109,7 +115,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     const queryBuilder = this.videoRepository.createQueryBuilder('video');
 
     const videos = await queryBuilder
-      .where(`UPPER(video.title) like :title`, {
+      .where(`UPPER(video.title) like :title and video.isPublic=TRUE`, {
         title: `%${term.toUpperCase()}%`,
       })
       .leftJoinAndSelect('video.user', 'userId')
@@ -127,6 +133,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
   }
 
   async updateVideo(id: string, updateVideoDto: UpdateVideoDto): Promise<boolean> {
+
 
     const video = await this.getVideoById(id);
     if( !video ) throw new NotFoundException(`Video with id ${id} not found`);
@@ -151,7 +158,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
 
   private getInstanceVideoDetailResponse( video: Video ): VideoDetailsResponse {
 
-    const { id, title, videoUrl, miniatureUrl, description, duration } = video;
+    const { id, title, videoUrl, miniatureUrl, description, duration, comments } = video;
     const { user } = video;
 
 
@@ -163,6 +170,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       description,
       duration,
       nameUser: user.userName,
+      comments
     });
 
   }

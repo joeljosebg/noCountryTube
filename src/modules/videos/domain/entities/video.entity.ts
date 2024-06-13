@@ -1,14 +1,13 @@
 import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
 import { User } from '@/modules/users/domain/entities/user.entity';
-import { Optional } from '@nestjs/common';
+
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

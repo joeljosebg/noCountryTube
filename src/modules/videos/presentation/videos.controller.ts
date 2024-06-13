@@ -136,7 +136,7 @@ export class VideosController {
   }
 
 
-  @Put()
+  @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Update a video' })
@@ -149,7 +149,9 @@ export class VideosController {
     return this.videoService.updateVideo(id, updateVideoDto);
   }
 
-  @Delete()
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Delete a video' })
   @ApiResponse({
     status: 201,

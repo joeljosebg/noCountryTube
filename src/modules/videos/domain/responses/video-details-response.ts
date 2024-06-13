@@ -1,3 +1,5 @@
+import { CommentVideo } from "@/modules/iteration-video/domain/entities/comment-video.entity";
+
 export class VideoDetailsResponse {
 
     private constructor (
@@ -8,14 +10,15 @@ export class VideoDetailsResponse {
         public duration: string,
         public nameUser: string,
         public description?: string,
+        public comments?: CommentVideo[]
     ){}
 
 
     public static fromObject( object: {[key: string]: any} ): VideoDetailsResponse {
         
-        const { id, title, videoUrl, miniatureUrl, description,duration, nameUser,  } = object;
+        const { id, title, videoUrl, miniatureUrl, description,duration, nameUser, comments } = object;
 
-        console.log(object);
+        
 
         if( !id || !title || !videoUrl || !nameUser || !miniatureUrl || !duration ) {
             throw new Error('error creating instance VideoDatailsResponse');
@@ -29,6 +32,7 @@ export class VideoDetailsResponse {
             duration,
             nameUser,
             description,
+            comments
         )
     }
     
