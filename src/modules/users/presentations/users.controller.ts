@@ -121,7 +121,7 @@ export class UsersController {
     return this.userService.newPassword(newPasswordDto);
   }
 
-  @Get('get-user-profile/:id')
+  @Get('get-user-profile/:userName')
   @ApiOperation({
     summary: 'Obtener la informacion de un usuario en especifico',
   })
@@ -130,9 +130,9 @@ export class UsersController {
     type: UserResponseDto,
   })
   async getUserProfileAndVideos(
-    @Param('id') id: string,
+    @Param('userName') userName: string,
   ): Promise<UserResponseDto> {
-    return this.userService.getUserProfileAndVideos(id);
+    return this.userService.getUserProfileAndVideos(userName);
   }
 
   @Get()

@@ -87,8 +87,10 @@ export class UserService implements UserServiceInterface {
       data: { ...user, password: '' },
     } as UserResponseDto;
   }
-  async getUserProfileAndVideos(id: string): Promise<UserResponseDto> {
-    const user = await this.userRepository.getUserProfileAndVideos(id);
+  async getUserProfileAndVideos(userName: string): Promise<UserResponseDto> {
+    const user = await this.userRepository.getUserProfileAndVideos(
+      userName.toLocaleLowerCase(),
+    );
 
     return {
       success: true,

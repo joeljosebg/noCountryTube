@@ -60,9 +60,9 @@ export class UserRepository implements UserRepositoryPort {
   async getUser(id: string): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
   }
-  async getUserProfileAndVideos(id: string): Promise<User> {
+  async getUserProfileAndVideos(userName: string): Promise<User> {
     return this.userRepository.findOne({
-      where: { id },
+      where: { userName },
       relations: ['videos'],
     });
   }

@@ -23,7 +23,7 @@ export interface UserServiceInterface {
   updateUser(id: string, user: UpdateUserDto): Promise<UserResponseDto>;
   deleteUser(id: string): Promise<SuccessResponseDto>;
   getUser(id: string): Promise<UserResponseDto>;
-  getUserProfileAndVideos(id: string): Promise<UserResponseDto>;
+  getUserProfileAndVideos(userName: string): Promise<UserResponseDto>;
   findByEmail(email: string): Promise<User>;
   findByUsername(userName: string): Promise<User>;
   verifyEmail(email: string): Promise<boolean>;
