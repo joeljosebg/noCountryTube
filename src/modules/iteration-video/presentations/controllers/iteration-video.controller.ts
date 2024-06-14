@@ -34,6 +34,9 @@ import { CommentVideoServiceInterface } from '@/modules/iteration-video/domain/s
 import { SaveCommentVideoDto } from '@/modules/iteration-video/applications/dto/save-comment-video.dto';
 import { SaveViewVideoDto } from '@/modules/iteration-video/applications/dto/save-view-video.dto';
 import { ViewVideoServiceInterface } from '@/modules/iteration-video/domain/services/view-video-service.interface';
+import { WebsocketGateway } from '@/libs/websocket/websocket.gateway';
+import { VIDEO_SERVICE_TOKEN } from '@/modules/videos/provider.token';
+import { VideoService } from '@/modules/videos/domain/services/video-service';
 
 @ApiTags('Iteration Videos')
 @Controller('iteration-video')
@@ -46,6 +49,9 @@ export class IterationVideoController {
     private readonly commentVideoService: CommentVideoServiceInterface,
     @Inject(VIEW_VIDEO_SERVICE_TOKEN)
     private readonly viewVideoService: ViewVideoServiceInterface,
+    private readonly websocketGateway: WebsocketGateway,
+    @Inject(VIDEO_SERVICE_TOKEN)
+    private readonly videoService: VideoService,
   ) {}
 
   @Post('save-like')
@@ -56,9 +62,19 @@ export class IterationVideoController {
     description: 'Retorna el video ha sido guardado correctamente.',
     type: SaveLikeVideoResponseDto,
   })
-  saveLike(@Req() req, @Body() saveLike: SaveLikeVideoWithUserDto) {
+  async saveLike(@Req() req, @Body() saveLike: SaveLikeVideoWithUserDto) {
     const userId = req.user.userId;
-    return this.iterationVideoService.saveLike({ ...saveLike, userId });
+    const save = await this.iterationVideoService.saveLike({
+      ...saveLike,
+      userId,
+    });
+    const video = await this.videoService.getVideoDetailById(
+      saveLike.videoId,
+      req.user?.userId,
+    );
+
+    this.websocketGateway.server.emit('videoIteration', video);
+    return save;
   }
 
   @Post('save-dislike')
@@ -69,9 +85,22 @@ export class IterationVideoController {
     description: 'Retorna el video ha sido guardado correctamente.',
     type: SaveDisLikeVideoResponseDto,
   })
-  saveDisLike(@Req() req, @Body() saveDisLike: SaveDisLikeVideoWithUserDto) {
+  async saveDisLike(
+    @Req() req,
+    @Body() saveDisLike: SaveDisLikeVideoWithUserDto,
+  ) {
     const userId = req.user.userId;
-    return this.iterationVideoService.saveDisLike({ ...saveDisLike, userId });
+    const save = await this.iterationVideoService.saveDisLike({
+      ...saveDisLike,
+      userId,
+    });
+    const video = await this.videoService.getVideoDetailById(
+      saveDisLike.videoId,
+      req.user?.userId,
+    );
+
+    this.websocketGateway.server.emit('videoIteration', video);
+    return save;
   }
 
   @Get('get-video-iterations')
@@ -95,12 +124,19 @@ export class IterationVideoController {
     description: 'Retorna el comentario ha sido guardado correctamente.',
     type: SaveDisLikeVideoResponseDto,
   })
-  savecommentVideo(@Req() req, @Body() saveComment: SaveCommentVideoDto) {
+  async savecommentVideo(@Req() req, @Body() saveComment: SaveCommentVideoDto) {
     const userId = req.user.userId;
-    return this.commentVideoService.saveCommentVideo({
+    const save = await this.commentVideoService.saveCommentVideo({
       ...saveComment,
       userId,
     });
+    const video = await this.videoService.getVideoDetailById(
+      saveComment.videoId,
+      req.user?.userId,
+    );
+
+    this.websocketGateway.server.emit('videoIteration', video);
+    return save;
   }
   @Post('save-view')
   @UseGuards(AuthGuard('jwt'))
@@ -110,11 +146,18 @@ export class IterationVideoController {
     description: 'Retorna el comentario ha sido guardado correctamente.',
     type: SaveDisLikeVideoResponseDto,
   })
-  saveView(@Req() req, @Body() saveComment: SaveViewVideoDto) {
+  async saveView(@Req() req, @Body() saveView: SaveViewVideoDto) {
     const userId = req.user.userId;
-    return this.viewVideoService.saveViewVideo({
-      ...saveComment,
+    const save = await this.viewVideoService.saveViewVideo({
+      ...saveView,
       userId,
     });
+    const video = await this.videoService.getVideoDetailById(
+      saveView.videoId,
+      req.user?.userId,
+    );
+
+    this.websocketGateway.server.emit('videoIteration', video);
+    return save;
   }
 }

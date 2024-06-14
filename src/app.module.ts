@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CommonModule } from './modules/common/common.module';
 import { MailModule } from './libs/mailer/mailer.module';
 import { CacheModule } from './libs/cache/cache.module';
+import { WebsocketModule } from './libs/websocket/websocket.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CacheModule } from './libs/cache/cache.module';
     CommonModule,
     MailModule,
     CacheModule,
+    WebsocketModule,
   ],
   controllers: [],
   providers: [],

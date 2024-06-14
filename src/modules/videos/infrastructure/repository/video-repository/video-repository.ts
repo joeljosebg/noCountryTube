@@ -180,12 +180,16 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     } = video;
     const { user } = video;
 
+    console.log({ interactions });
+
     const isLike = interactions.find(
-      (interaction) => interaction?.user?.id === userId && interaction.like,
+      (interaction) => interaction.userId === userId && interaction.like,
     );
     const isDisLike = interactions.find(
-      (interaction) => interaction?.user?.id === userId && interaction.disLike,
+      (interaction) => interaction.userId === userId && interaction.disLike,
     );
+
+    console.log({ isLike, isDisLike, userId });
 
     return VideoDetailsResponse.fromObject({
       id,

@@ -22,9 +22,12 @@ import { CommentVideoService } from '@/modules/iteration-video/applications/serv
 import { ViewVideo } from './domain/entities/view-video.entity';
 import { ViewVideoRepository } from './infrastructure/repositories/view-video.repository';
 import { ViewVideoService } from './applications/services/view-video.service';
+import { WebsocketModule } from '@/libs/websocket/websocket.module';
+import { VideosModule } from '@/modules/videos/videos.module';
 
 @Module({
   imports: [
+    WebsocketModule,
     DatabaseModule,
     TypeOrmModule.forFeature([
       IterationVideo,
@@ -33,6 +36,7 @@ import { ViewVideoService } from './applications/services/view-video.service';
       CommentVideo,
       ViewVideo,
     ]),
+    VideosModule,
   ],
   controllers: [IterationVideoController],
   providers: [

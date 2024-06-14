@@ -35,5 +35,6 @@ import { UploadFilesModule } from '../upload-files/upload-files.module';
       useClass: VideoRepositoryImpl,
     },
   ],
+  exports: [VIDEO_SERVICE_TOKEN],
 })
 export class VideosModule {}
