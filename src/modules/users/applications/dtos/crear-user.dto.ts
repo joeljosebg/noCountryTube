@@ -34,10 +34,8 @@ export class CreateUserDto {
   @IsString()
   firstName: string;
 
-  @ApiProperty({ example: '31/12/2024' })
-  @Matches(/^\d{2}\/\d{2}\/\d{4}$/, {
-    message: 'La fecha debe estar en el formato dd/mm/yyyy',
-  })
+  @ApiProperty({ example: 'birthday' })
+  @IsDate()
   @Type(() => Date)
   birthday: Date;
 
