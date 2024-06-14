@@ -1,5 +1,6 @@
 import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
+import { ViewVideo } from '@/modules/iteration-video/domain/entities/view-video.entity';
 import { User } from '@/modules/users/domain/entities/user.entity';
 
 import {
@@ -55,6 +56,9 @@ export class Video {
   @OneToMany(() => IterationVideo, (interactions) => interactions.video)
   interactions: IterationVideo[];
 
-  @OneToMany(() => CommentVideo, (interactions) => interactions.video)
+  @OneToMany(() => CommentVideo, (coment) => coment.video)
   comments: CommentVideo[];
+
+  @OneToMany(() => ViewVideo, (view) => view.video)
+  views: ViewVideo[];
 }

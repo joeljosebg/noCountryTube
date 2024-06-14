@@ -10,6 +10,8 @@ import {
   COMMENT_VIDEO_SERVICE_TOKEN,
   ITERATION_VIDEO_REPOSITORY_TOKEN,
   ITERATION_VIDEO_SERVICE_TOKEN,
+  VIEW_VIDEO_REPOSITORY_TOKEN,
+  VIEW_VIDEO_SERVICE_TOKEN,
 } from './provider.token';
 import { IterationVideoRepository } from '@/modules/iteration-video/infrastructure/repositories/iteration-video.repository';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
@@ -17,11 +19,20 @@ import { User } from '@/modules/users/domain/entities/user.entity';
 import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { CommentVideoRepository } from '@/modules/iteration-video/infrastructure/repositories/comment-video.repository';
 import { CommentVideoService } from '@/modules/iteration-video/applications/services/comment-video.service';
+import { ViewVideo } from './domain/entities/view-video.entity';
+import { ViewVideoRepository } from './infrastructure/repositories/view-video.repository';
+import { ViewVideoService } from './applications/services/view-video.service';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([IterationVideo, Video, User, CommentVideo]),
+    TypeOrmModule.forFeature([
+      IterationVideo,
+      Video,
+      User,
+      CommentVideo,
+      ViewVideo,
+    ]),
   ],
   controllers: [IterationVideoController],
   providers: [
@@ -40,6 +51,14 @@ import { CommentVideoService } from '@/modules/iteration-video/applications/serv
     {
       provide: COMMENT_VIDEO_SERVICE_TOKEN,
       useClass: CommentVideoService,
+    },
+    {
+      provide: VIEW_VIDEO_REPOSITORY_TOKEN,
+      useClass: ViewVideoRepository,
+    },
+    {
+      provide: VIEW_VIDEO_SERVICE_TOKEN,
+      useClass: ViewVideoService,
     },
   ],
 })

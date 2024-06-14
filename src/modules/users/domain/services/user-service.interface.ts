@@ -16,10 +16,12 @@ import {
   NewPasswordDto,
   NewPasswordResponseDto,
 } from '../../applications/dtos/new-password.dto';
+import { UserWithVideoResponseDto } from '../../applications/dtos/create-user-with-video-response.dto';
 
 export interface UserServiceInterface {
   createUser(user: CreateUserDto): Promise<UserResponseDto>;
   getUsers(): Promise<GetUsersResponseDto>;
+  getUserWithVideos(): Promise<UserWithVideoResponseDto>;
   updateUser(id: string, user: UpdateUserDto): Promise<UserResponseDto>;
   deleteUser(id: string): Promise<SuccessResponseDto>;
   getUser(id: string): Promise<UserResponseDto>;

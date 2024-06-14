@@ -42,6 +42,33 @@ export class UserRepository implements UserRepositoryPort {
 
     return users;
   }
+  async getUserWithVideos(): Promise<User[]> {
+    const topUsers = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.videos', 'video')
+      .leftJoin('video.interactions', 'interaction')
+      .leftJoin('video.views', 'view')
+      .select('user.id', 'userId')
+      .addSelect('user.userName', 'userName')
+      .addSelect(
+        'SUM(CASE WHEN interaction.like = TRUE THEN 1 ELSE 0 END)',
+        'totallikes',
+      )
+      .addSelect('COUNT(view.id)', 'totalviews')
+      .groupBy('user.id')
+      .orderBy('totallikes', 'DESC')
+      .addOrderBy('totalviews', 'DESC')
+      .limit(10)
+      .getRawMany();
+
+    return topUsers.map((user) => ({
+      ...user,
+      totalLikes: Number(user.totallikes) || 0,
+      totalViews: Number(user.totalviews) || 0,
+      totallikes: undefined,
+      totalviews: undefined,
+    }));
+  }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     console.log({ updateUserDto });

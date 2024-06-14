@@ -22,6 +22,7 @@ import { IterationVideoServiceInterface } from '@/modules/iteration-video/domain
 import {
   COMMENT_VIDEO_SERVICE_TOKEN,
   ITERATION_VIDEO_SERVICE_TOKEN,
+  VIEW_VIDEO_SERVICE_TOKEN,
 } from '@/modules/iteration-video/provider.token';
 import {
   SaveDisLikeVideoResponseDto,
@@ -31,6 +32,8 @@ import { GetVideoIterationsResponseDto } from '@/modules/iteration-video/applica
 import { AuthGuard } from '@nestjs/passport';
 import { CommentVideoServiceInterface } from '@/modules/iteration-video/domain/services/comment-video-service.interface';
 import { SaveCommentVideoDto } from '@/modules/iteration-video/applications/dto/save-comment-video.dto';
+import { SaveViewVideoDto } from '@/modules/iteration-video/applications/dto/save-view-video.dto';
+import { ViewVideoServiceInterface } from '@/modules/iteration-video/domain/services/view-video-service.interface';
 
 @ApiTags('Iteration Videos')
 @Controller('iteration-video')
@@ -41,6 +44,8 @@ export class IterationVideoController {
     private readonly iterationVideoService: IterationVideoServiceInterface,
     @Inject(COMMENT_VIDEO_SERVICE_TOKEN)
     private readonly commentVideoService: CommentVideoServiceInterface,
+    @Inject(VIEW_VIDEO_SERVICE_TOKEN)
+    private readonly viewVideoService: ViewVideoServiceInterface,
   ) {}
 
   @Post('save-like')
@@ -93,6 +98,21 @@ export class IterationVideoController {
   savecommentVideo(@Req() req, @Body() saveComment: SaveCommentVideoDto) {
     const userId = req.user.userId;
     return this.commentVideoService.saveCommentVideo({
+      ...saveComment,
+      userId,
+    });
+  }
+  @Post('save-view')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Guarda cuando el usuario vea el video' })
+  @ApiOkResponse({
+    description: 'Retorna el comentario ha sido guardado correctamente.',
+    type: SaveDisLikeVideoResponseDto,
+  })
+  saveView(@Req() req, @Body() saveComment: SaveViewVideoDto) {
+    const userId = req.user.userId;
+    return this.viewVideoService.saveViewVideo({
       ...saveComment,
       userId,
     });

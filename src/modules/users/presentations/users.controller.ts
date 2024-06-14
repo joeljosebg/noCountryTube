@@ -42,6 +42,7 @@ import {
   NewPasswordDto,
   NewPasswordResponseDto,
 } from '../applications/dtos/new-password.dto';
+import { UserWithVideoResponseDto } from '../applications/dtos/create-user-with-video-response.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -133,6 +134,18 @@ export class UsersController {
     @Param('userName') userName: string,
   ): Promise<UserResponseDto> {
     return this.userService.getUserProfileAndVideos(userName);
+  }
+
+  @Get('get-top-users')
+  @ApiOperation({
+    summary: 'Obtener lo usuarios con sus videos',
+  })
+  @ApiOkResponse({
+    description: 'Returns the user has been successfully created.',
+    type: UserResponseDto,
+  })
+  async getUserWithVideos(): Promise<UserWithVideoResponseDto> {
+    return this.userService.getUserWithVideos();
   }
 
   @Get()

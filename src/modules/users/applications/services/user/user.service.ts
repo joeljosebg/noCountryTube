@@ -29,6 +29,7 @@ import {
   NewPasswordDto,
   NewPasswordResponseDto,
 } from '../../dtos/new-password.dto';
+import { UserWithVideoResponseDto } from '../../dtos/create-user-with-video-response.dto';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -78,6 +79,13 @@ export class UserService implements UserServiceInterface {
       success: true,
       data: users,
     } as GetUsersResponseDto;
+  }
+  async getUserWithVideos(): Promise<UserWithVideoResponseDto> {
+    const users = await this.userRepository.getUserWithVideos();
+    return {
+      success: true,
+      data: users,
+    } as UserWithVideoResponseDto;
   }
   async getUser(id: string): Promise<UserResponseDto> {
     const user = await this.userRepository.getUser(id);

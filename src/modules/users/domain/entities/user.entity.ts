@@ -1,5 +1,6 @@
 import { CommentVideo } from '@/modules/iteration-video/domain/entities/comment-video.entity';
 import { IterationVideo } from '@/modules/iteration-video/domain/entities/iteration-video.entity';
+import { ViewVideo } from '@/modules/iteration-video/domain/entities/view-video.entity';
 import { Video } from '@/modules/videos/domain/entities/video.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsEmail } from 'class-validator';
@@ -75,6 +76,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => CommentVideo, (commentVideo) => commentVideo.user)
   commentVideos: CommentVideo[];
+
+  @OneToMany(() => ViewVideo, (viewVideo) => viewVideo.user)
+  viewVideos: ViewVideo[];
 
   @ApiProperty({
     example: '2021-09-01T00:00:00.000Z',

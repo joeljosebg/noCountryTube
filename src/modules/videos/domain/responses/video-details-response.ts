@@ -13,6 +13,7 @@ export class VideoDetailsResponse {
     public createdAt?: Date,
     public likeCount?: number,
     public disLikeCount?: number,
+    public viewCount?: number,
   ) {}
 
   public static fromObject(object: {
@@ -31,6 +32,7 @@ export class VideoDetailsResponse {
       createdAt,
       likeCount,
       disLikeCount,
+      viewCount,
     } = object;
 
     if (!id || !title || !videoUrl || !nameUser || !miniatureUrl || !duration) {
@@ -49,6 +51,7 @@ export class VideoDetailsResponse {
       createdAt,
       likeCount,
       disLikeCount,
+      viewCount,
     );
   }
 }

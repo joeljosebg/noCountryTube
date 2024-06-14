@@ -9,6 +9,7 @@ export interface UserRepositoryPort {
   getUser(id: string): Promise<User>;
   getUserProfileAndVideos(userName: string): Promise<User>;
   getUsers(): Promise<User[]>;
+  getUserWithVideos(): Promise<User[]>;
   findByEmail(email: string): Promise<User | null>;
   findByUsername(userName: string): Promise<User | null>;
   updatePassword(id: string, password: string): Promise<User>;

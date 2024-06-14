@@ -67,6 +67,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
           user: true,
         },
         interactions: true,
+        views: true,
       },
     });
 
@@ -90,6 +91,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
           user: true,
         },
         interactions: true,
+        views: true,
       },
     });
 
@@ -117,6 +119,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.user', 'user')
       .leftJoinAndSelect('video.comments', 'comments')
+      .leftJoinAndSelect('video.views', 'views')
       .leftJoinAndSelect('comments.user', 'commentUser')
       .leftJoinAndSelect('video.interactions', 'interaction')
       .where('UPPER(video.title) LIKE :title AND video.isPublic = TRUE', {
@@ -169,6 +172,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       comments,
       createdAt,
       interactions,
+      views,
     } = video;
     const { user } = video;
 
@@ -192,6 +196,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       likeCount: interactions.filter((interaction) => interaction.like).length,
       disLikeCount: interactions.filter((interaction) => interaction.disLike)
         .length,
+      viewCount: views.length,
     });
   }
 }
