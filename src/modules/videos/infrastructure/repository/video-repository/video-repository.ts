@@ -82,6 +82,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
 
   async getVideoDetailById(
     idVideo: string,
+    userId?: string,
   ): Promise<VideoResponse<VideoDetailsResponse>> {
     const video = await this.videoRepository.findOne({
       where: { id: idVideo },
@@ -98,7 +99,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     if (!video)
       throw new NotFoundException(`Video with id ${idVideo} not found`);
 
-    const videoDetail = this.getInstanceVideoDetailResponse(video);
+    const videoDetail = this.getInstanceVideoDetailResponse(video, userId);
 
     const response = new VideoResponse(true, 'Video by id', videoDetail);
 
@@ -160,7 +161,10 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
     return true;
   }
 
-  private getInstanceVideoDetailResponse(video: Video): VideoDetailsResponse {
+  private getInstanceVideoDetailResponse(
+    video: Video,
+    userId?: string,
+  ): VideoDetailsResponse {
     console.log({ video });
     const {
       id,
@@ -175,6 +179,13 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       views,
     } = video;
     const { user } = video;
+
+    const isLike = interactions.find(
+      (interaction) => interaction?.user?.id === userId && interaction.like,
+    );
+    const isDisLike = interactions.find(
+      (interaction) => interaction?.user?.id === userId && interaction.disLike,
+    );
 
     return VideoDetailsResponse.fromObject({
       id,
@@ -197,6 +208,8 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       disLikeCount: interactions.filter((interaction) => interaction.disLike)
         .length,
       viewCount: views.length,
+      isLike: isLike ? true : false,
+      isDisLike: isDisLike ? true : false,
     });
   }
 }

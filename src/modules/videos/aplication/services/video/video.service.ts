@@ -11,40 +11,49 @@ import { UpdateVideoDto } from '../../dtos/update-video.dto';
 
 @Injectable()
 export class VideoServiceImpl implements VideoService {
+  constructor(
+    @Inject(VIDEO_REPOSITORY_TOKEN)
+    private videoRepository: VideoRepositoryPort,
+  ) {}
 
-    constructor(
-        @Inject(VIDEO_REPOSITORY_TOKEN)
-        private videoRepository: VideoRepositoryPort
-    ){}
-    
+  createVideo(
+    createVideoDto: CreateVideoDto,
+    videoPath: string,
+    miniaturePath: string,
+  ): Promise<VideoResponse<Video>> {
+    return this.videoRepository.createVideo(
+      createVideoDto,
+      videoPath,
+      miniaturePath,
+    );
+  }
 
+  getAllVideos(
+    paginationDto: PaginationDto,
+  ): Promise<VideoResponse<VideoDetailsResponse[]>> {
+    return this.videoRepository.getAllVideos(paginationDto);
+  }
 
-    createVideo(createVideoDto: CreateVideoDto, videoPath:string, miniaturePath: string): Promise<VideoResponse<Video>> {
-        return this.videoRepository.createVideo(createVideoDto, videoPath, miniaturePath);
-    }
+  getVideoDetailById(
+    id: string,
+    userId?: string,
+  ): Promise<VideoResponse<VideoDetailsResponse>> {
+    return this.videoRepository.getVideoDetailById(id, userId);
+  }
 
-    getAllVideos(paginationDto: PaginationDto): Promise<VideoResponse<VideoDetailsResponse[]>> {
-        return this.videoRepository.getAllVideos(paginationDto);
-    }
+  getVideoById(id: string): Promise<Video> {
+    return this.videoRepository.getVideoById(id);
+  }
 
-    
-    getVideoDetailById(id: string): Promise<VideoResponse<VideoDetailsResponse>> {
-        return this.videoRepository.getVideoDetailById(id);
-    }
+  searchVideos(term: string): Promise<VideoResponse<VideoDetailsResponse[]>> {
+    return this.videoRepository.searchVideos(term);
+  }
 
-    getVideoById(id: string): Promise<Video> {
-        return this.videoRepository.getVideoById(id);
-    }
+  updateVideo(id: string, updateVideoDto: UpdateVideoDto): Promise<boolean> {
+    return this.videoRepository.updateVideo(id, updateVideoDto);
+  }
 
-    searchVideos(term: string): Promise<VideoResponse<VideoDetailsResponse[]>> {
-        return this.videoRepository.searchVideos(term);
-    }
-
-    updateVideo(id: string, updateVideoDto: UpdateVideoDto): Promise<boolean> {
-        return this.videoRepository.updateVideo(id, updateVideoDto);
-    }
-
-    deleteVideo(id: string): Promise<boolean> {
-        return this.videoRepository.deleteVideo(id);
-    }
+  deleteVideo(id: string): Promise<boolean> {
+    return this.videoRepository.deleteVideo(id);
+  }
 }

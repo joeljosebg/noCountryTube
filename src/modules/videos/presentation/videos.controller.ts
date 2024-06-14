@@ -1,4 +1,3 @@
-
 import {
   BadRequestException,
   Body,
@@ -16,8 +15,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-
-
 
 import {
   ApiBearerAuth,
@@ -39,7 +36,6 @@ import { VideoResponse } from '../domain/responses/video-response';
 import { VideoDetailsResponse } from '../domain/responses/video-details-response';
 import { UpdateVideoDto } from '../aplication/dtos/update-video.dto';
 import { boolean } from 'joi';
-
 
 @ApiTags('videos')
 @Controller('videos')
@@ -75,25 +71,22 @@ export class VideosController {
       },
     ),
   )
-
-  
-  
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   createVideo(
     @Body() createVideoDto: CreateVideoDto,
-    @Req() req,
+    @Req() req,
     @UploadedFiles()
     files: { video: Express.Multer.File; miniature: Express.Multer.File },
   ) {
     if (!files.video) throw new BadRequestException('Video is required.');
-    if( !files.miniature) throw new BadRequestException('Miniature is required.');
+    if (!files.miniature)
+      throw new BadRequestException('Miniature is required.');
     return this.videoService.createVideo(
       { ...createVideoDto, userId: req.user.userId },
       files.video[0].path,
       files.miniature[0].path,
     );
-
   }
 
   @Get()
@@ -103,12 +96,22 @@ export class VideosController {
     description: 'Successful retrieval of videos.',
     type: VideoResponse,
   })
-  @ApiQuery({ name: 'offset', required: false, description: 'The number of items to skip before starting to collect the result set.' })
-  @ApiQuery({ name: 'limit', required: false, description: 'The number of items to return.' })
-  findAll( @Query() paginationDto: PaginationDto): Promise<VideoResponse<VideoDetailsResponse[]>> {
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description:
+      'The number of items to skip before starting to collect the result set.',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'The number of items to return.',
+  })
+  findAll(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<VideoResponse<VideoDetailsResponse[]>> {
     return this.videoService.getAllVideos(paginationDto);
   }
-
 
   @Get(':id')
   @ApiOperation({ summary: 'Get video by id' })
@@ -117,11 +120,12 @@ export class VideosController {
     description: 'Get video by id',
     type: VideoResponse,
   })
-
-  findVideoById( @Param('id', ParseUUIDPipe) id: string ): Promise<VideoResponse<VideoDetailsResponse>> {
-    return this.videoService.getVideoDetailById(id);
+  findVideoById(
+    @Req() req,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<VideoResponse<VideoDetailsResponse>> {
+    return this.videoService.getVideoDetailById(id, req.user?.userId);
   }
-
 
   @Get('/search/:term')
   @ApiOperation({ summary: 'Search videos' })
@@ -130,11 +134,11 @@ export class VideosController {
     description: 'Search videos',
     type: VideoResponse,
   })
-
-  searchVideos( @Param('term') term: string ): Promise<VideoResponse<VideoDetailsResponse[]>> {
+  searchVideos(
+    @Param('term') term: string,
+  ): Promise<VideoResponse<VideoDetailsResponse[]>> {
     return this.videoService.searchVideos(term);
   }
-
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
@@ -145,7 +149,10 @@ export class VideosController {
     description: 'Update a video',
     type: boolean,
   })
-  updateVideo( @Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto): Promise<boolean>{
+  updateVideo(
+    @Param('id') id: string,
+    @Body() updateVideoDto: UpdateVideoDto,
+  ): Promise<boolean> {
     return this.videoService.updateVideo(id, updateVideoDto);
   }
 
@@ -158,9 +165,7 @@ export class VideosController {
     description: 'Delete a video',
     type: boolean,
   })
-
-  deleteVideo( @Param('id') id: string): Promise<boolean> {
+  deleteVideo(@Param('id') id: string): Promise<boolean> {
     return this.videoService.deleteVideo(id);
   }
-
 }
