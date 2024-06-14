@@ -73,7 +73,7 @@ export class IterationVideoController {
       req.user?.userId,
     );
 
-    this.websocketGateway.server.emit('videoIteration', video);
+    this.websocketGateway.server.emit(saveLike.videoId, video);
     return save;
   }
 
@@ -99,7 +99,7 @@ export class IterationVideoController {
       req.user?.userId,
     );
 
-    this.websocketGateway.server.emit('videoIteration', video);
+    this.websocketGateway.server.emit(saveDisLike.videoId, video);
     return save;
   }
 
@@ -135,7 +135,7 @@ export class IterationVideoController {
       req.user?.userId,
     );
 
-    this.websocketGateway.server.emit('videoIteration', video);
+    this.websocketGateway.server.emit(saveComment.videoId, video);
     return save;
   }
   @Post('save-view')
@@ -157,7 +157,7 @@ export class IterationVideoController {
       req.user?.userId,
     );
 
-    this.websocketGateway.server.emit('videoIteration', video);
+    this.websocketGateway.server.emit(saveView.videoId, video);
     return save;
   }
 }
