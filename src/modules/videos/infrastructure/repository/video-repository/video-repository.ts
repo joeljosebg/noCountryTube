@@ -66,6 +66,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
         comments: {
           user: true,
         },
+        interactions: true,
       },
     });
 
@@ -83,7 +84,13 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
   ): Promise<VideoResponse<VideoDetailsResponse>> {
     const video = await this.videoRepository.findOne({
       where: { id: idVideo },
-      relations: { user: true },
+      relations: {
+        user: true,
+        comments: {
+          user: true,
+        },
+        interactions: true,
+      },
     });
 
     if (!video)
@@ -106,13 +113,15 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
   async searchVideos(
     term: string,
   ): Promise<VideoResponse<VideoDetailsResponse[]>> {
-    const queryBuilder = this.videoRepository.createQueryBuilder('video');
-
-    const videos = await queryBuilder
-      .where(`UPPER(video.title) like :title and video.isPublic=TRUE`, {
+    const videos = await this.videoRepository
+      .createQueryBuilder('video')
+      .leftJoinAndSelect('video.user', 'user')
+      .leftJoinAndSelect('video.comments', 'comments')
+      .leftJoinAndSelect('comments.user', 'commentUser')
+      .leftJoinAndSelect('video.interactions', 'interaction')
+      .where('UPPER(video.title) LIKE :title AND video.isPublic = TRUE', {
         title: `%${term.toUpperCase()}%`,
       })
-      .leftJoinAndSelect('video.user', 'userId')
       .getMany();
 
     const videoDetail = videos.map((video) => {
@@ -149,6 +158,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
   }
 
   private getInstanceVideoDetailResponse(video: Video): VideoDetailsResponse {
+    console.log({ video });
     const {
       id,
       title,
@@ -158,6 +168,7 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       duration,
       comments,
       createdAt,
+      interactions,
     } = video;
     const { user } = video;
 
@@ -169,7 +180,6 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
       description,
       duration,
       nameUser: user.userName,
-      createdAt: createdAt || new Date(),
       comments: comments.map((comment) => {
         return {
           id: comment.id,
@@ -178,6 +188,10 @@ export class VideoRepositoryImpl implements VideoRepositoryPort {
           userName: comment.user.userName,
         };
       }),
+      createdAt: createdAt || new Date(),
+      likeCount: interactions.filter((interaction) => interaction.like).length,
+      disLikeCount: interactions.filter((interaction) => interaction.disLike)
+        .length,
     });
   }
 }
